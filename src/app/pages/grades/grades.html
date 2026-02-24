@@ -1,0 +1,48 @@
+<div class="p-4 sm:p-6">
+
+  <!-- Page header -->
+  <div class="mb-6">
+    <h2 class="text-lg font-bold text-slate-800">{{ 'GRADES.TITLE' | translate }}</h2>
+  </div>
+
+  <!-- Grades Table -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr style="background-color: var(--color-primary)">
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'GRADES.COURSE_NAME' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'GRADES.SEMESTER' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'GRADES.GRADE' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'GRADES.RECOGNITION' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          @for (grade of grades(); track grade.id) {
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-4 py-3 font-medium text-slate-700">{{ grade.courseName }}</td>
+              <td class="px-4 py-3 text-slate-500">{{ grade.semester }}</td>
+              <td class="px-4 py-3 font-semibold text-slate-700">{{ grade.grade }}</td>
+              <td class="px-4 py-3">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                  [class]="getGradeClass(grade.recognition)"
+                >
+                  {{ grade.recognition }}
+                </span>
+              </td>
+            </tr>
+          }
+          @empty {
+            <tr>
+              <td colspan="4" class="px-4 py-10 text-center text-slate-400 text-sm">
+                {{ 'GRADES.NO_GRADES' | translate }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,97 @@
+{
+  "LOGIN": {
+    "SUBTITLE": "Credit hours student registration system",
+    "CHOOSE_ROLE": "Choose",
+    "NATIONAL_ID": "National ID",
+    "PASSWORD": "Password",
+    "LOGIN_BTN": "Login",
+    "LOGGING_IN": "Logging in...",
+    "FILL_ALL_FIELDS": "Please fill in all fields.",
+    "SUPPORT_TEXT": "If you have a problem,",
+    "CONTACT_LINK": "Contact Student Affairs."
+  },
+  "DASHBOARD": {
+    "GREETING": "Hello, {{name}}",
+    "WELCOME_SUB": "Review your registered courses and hours.",
+    "GPA_MAX_HOURS": "Max hours depend on GPA",
+    "GPA": "GPA",
+    "AVAILABLE_HOURS": "Available Hours",
+    "PASSED_HOURS": "Passed Hours",
+    "REGISTERED_COURSES": "Registered Courses",
+    "COURSES_COUNT": "{{count}} Courses",
+    "HRS_VALUE": "{{value}} hrs",
+    "HOURS_ANALYTICS": "Hours Analytics",
+    "USED_VS_AVAILABLE": "Used vs Available",
+    "AVAILABLE": "Available",
+    "USED": "Used",
+    "DATA_BASED_ON_GPA": "Data based on GPA",
+    "DOWNLOAD_PDF": "Download PDF",
+    "CODE": "Code",
+    "COURSE_NAME": "Course Name",
+    "HOURS": "Hours",
+    "PROF": "Prof",
+    "ACTION": "Action",
+    "DELETE": "Delete",
+    "HOURS_UNIT": "Hours",
+    "NO_COURSES": "No registered courses yet."
+  },
+  "REGISTER": {
+    "TITLE": "Register Courses",
+    "SUBTITLE": "Select your courses for the current semester",
+    "COURSE_CODE": "Course code",
+    "COURSE_NAME": "Course Name",
+    "CREDIT_HOURS": "Credit Hours",
+    "PREREQUISITES": "Prerequisites",
+    "STATUS": "Status",
+    "REQUIREMENTS": "Requirements",
+    "ACTION": "Action",
+    "VIEW_REQUIREMENTS": "View Requirements",
+    "REGISTER_BTN": "Register",
+    "REGISTERED": "Registered",
+    "PREREQ_MSG": "Prerequisite not completed — you need to pass {{course}} before registering this course.",
+    "SUMMARY_TITLE": "Registration Summary",
+    "REGISTERED_COURSES_LABEL": "Registered Courses:",
+    "TOTAL_CREDIT_HOURS": "Total Credit Hours:",
+    "CONFIRM": "Confirm",
+    "NO_COURSES_SELECTED": "No courses selected.",
+    "SUCCESS": "Courses registered successfully!"
+  },
+  "GRADES": {
+    "TITLE": "Grades",
+    "COURSE_NAME": "Course Name",
+    "SEMESTER": "Semester",
+    "GRADE": "Grade",
+    "RECOGNITION": "Recognition",
+    "NO_GRADES": "No grades available."
+  },
+  "PROFILE": {
+    "TITLE": "Profile",
+    "NAME": "Name",
+    "EMAIL": "University Email",
+    "YEAR": "Year of Study",
+    "DEPARTMENT": "Department",
+    "STUDENT_ID": "Student ID",
+    "GPA": "GPA",
+    "DEFAULT_EMAIL": "yourname@university.edu"
+  },
+  "NAVBAR": {
+    "SUBTITLE": "Course Registration System",
+    "SEARCH": "Search by Course or Code",
+    "NOTIFICATIONS": "Notifications"
+  },
+  "SIDEBAR": {
+    "DASHBOARD": "Dashboard",
+    "REGISTER_COURSES": "Register Courses",
+    "GRADES": "Grades",
+    "PROFILE": "Profile",
+    "LOGOUT": "Logout"
+  },
+  "ROLES": {
+    "STUDENT": "Student",
+    "ADMIN": "Admin"
+  },
+  "LANG": {
+    "SWITCH": "العربية",
+    "CURRENT": "EN"
+  }
+}

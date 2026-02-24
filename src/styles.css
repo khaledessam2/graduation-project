@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #1a3a5c;
+    --color-accent:  #2563eb;
+  }
+}
+
+/* Arabic RTL font */
+html[lang="ar"],
+html[dir="rtl"] {
+  font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+}

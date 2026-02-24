@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build -- --configuration development)",
+      "Bash(ls -la /c/Users/khaled/Desktop/project/gradution-project/src/locale*)",
+      "Bash(npm install @ngx-translate/core @ngx-translate/http-loader)"
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-200 via-blue-100 to-slate-100 flex items-center justify-center p-6">
+  <div class="bg-white rounded-2xl p-8 w-full max-w-sm shadow-xl">
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <img src="assets/logo.png" alt="UniSmart" class="h-10 w-10 object-contain" onerror="this.style.display='none'" />
+        <ion-icon name="school-outline" class="text-3xl" style="color: var(--color-primary)"></ion-icon>
+      </div>
+      <h1 class="text-2xl font-bold" style="color: var(--color-primary)">UniSmart</h1>
+      <p class="text-slate-500 text-sm mt-1">{{ 'LOGIN.SUBTITLE' | translate }}</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="flex flex-col gap-4">
+
+      <!-- Role Select -->
+      <div class="relative">
+        <select
+          [(ngModel)]="role"
+          name="role"
+          class="w-full px-4 py-3 border-[1.5px] border-slate-300 rounded-xl text-sm text-slate-700 bg-white appearance-none outline-none focus:border-slate-500 transition-colors"
+        >
+          <option value="" disabled selected>{{ 'LOGIN.CHOOSE_ROLE' | translate }}</option>
+          @for (r of roles; track r.value) {
+            <option [value]="r.value">{{ r.key | translate }}</option>
+          }
+        </select>
+        <ion-icon
+          name="chevron-down-outline"
+          class="absolute end-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+        ></ion-icon>
+      </div>
+
+      <!-- National ID -->
+      <div class="flex items-center border-[1.5px] border-slate-300 rounded-xl bg-white focus-within:border-slate-500 transition-colors">
+        <input
+          type="text"
+          [(ngModel)]="nationalId"
+          name="nationalId"
+          [placeholder]="'LOGIN.NATIONAL_ID' | translate"
+          class="flex-1 px-4 py-3 bg-transparent text-sm text-slate-700 outline-none"
+          autocomplete="off"
+        />
+        <ion-icon name="card-outline" class="text-slate-400 me-4 text-lg shrink-0"></ion-icon>
+      </div>
+
+      <!-- Password -->
+      <div class="flex items-center border-[1.5px] border-slate-300 rounded-xl bg-white focus-within:border-slate-500 transition-colors">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          [(ngModel)]="password"
+          name="password"
+          [placeholder]="'LOGIN.PASSWORD' | translate"
+          class="flex-1 px-4 py-3 bg-transparent text-sm text-slate-700 outline-none"
+        />
+        <button
+          type="button"
+          class="me-3 text-slate-400 hover:text-slate-600 transition-colors p-1"
+          (click)="showPassword = !showPassword"
+        >
+          <ion-icon [name]="showPassword ? 'eye-off-outline' : 'lock-closed-outline'" class="text-lg block"></ion-icon>
+        </button>
+      </div>
+
+      <!-- Error message -->
+      @if (errorMsg()) {
+        <p class="text-red-500 text-sm text-center bg-red-50 px-4 py-2.5 rounded-xl border border-red-100">
+          {{ errorMsg() }}
+        </p>
+      }
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed transition-all mt-1"
+        style="background-color: var(--color-primary)"
+        [disabled]="loading()"
+      >
+        <ion-icon name="log-in-outline" class="text-lg"></ion-icon>
+        {{ (loading() ? 'LOGIN.LOGGING_IN' : 'LOGIN.LOGIN_BTN') | translate }}
+      </button>
+    </form>
+
+    <p class="text-center text-xs text-slate-400 mt-6">
+      {{ 'LOGIN.SUPPORT_TEXT' | translate }}
+      <a href="mailto:studentaffairs@university.edu" class="hover:underline" style="color: var(--color-accent)">
+        {{ 'LOGIN.CONTACT_LINK' | translate }}
+      </a>
+    </p>
+  </div>
+</div>

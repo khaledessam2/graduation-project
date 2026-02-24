@@ -1,0 +1,40 @@
+<aside
+  class="fixed inset-y-0 start-0 z-30 w-64 bg-white border-e border-slate-200 flex-col py-6 overflow-y-auto lg:flex lg:sticky lg:top-0 lg:h-screen lg:z-auto"
+  [class.hidden]="!layout.sidebarOpen()"
+  [class.flex]="layout.sidebarOpen()"
+>
+  <!-- Brand -->
+  <div class="px-5 mb-8 flex items-center gap-3">
+    <img src="assets/logo.png" alt="UniSmart" class="h-8 w-8 object-contain" onerror="this.style.display='none'" />
+    <div class="flex items-center gap-2">
+      <ion-icon name="book-outline" class="text-xl" style="color: var(--color-accent)"></ion-icon>
+      <span class="text-lg font-bold" style="color: var(--color-primary)">UniSmart</span>
+    </div>
+  </div>
+
+  <!-- Nav links -->
+  <nav class="flex-1 flex flex-col gap-1 px-3">
+    @for (item of navItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="bg-blue-50 !text-primary font-semibold"
+        class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 text-sm font-medium hover:bg-blue-50 hover:text-primary transition-all"
+        (click)="layout.close()"
+      >
+        <ion-icon [name]="item.icon + '-outline'" class="text-lg shrink-0"></ion-icon>
+        <span>{{ item.labelKey | translate }}</span>
+      </a>
+    }
+  </nav>
+
+  <!-- Logout -->
+  <div class="px-3 mt-4 pt-4 border-t border-slate-100">
+    <button
+      class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 text-sm font-medium hover:bg-red-50 hover:text-red-600 transition-all"
+      (click)="logout()"
+    >
+      <ion-icon name="log-out-outline" class="text-lg shrink-0"></ion-icon>
+      <span>{{ 'SIDEBAR.LOGOUT' | translate }}</span>
+    </button>
+  </div>
+</aside>

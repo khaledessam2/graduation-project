@@ -1,0 +1,97 @@
+{
+  "LOGIN": {
+    "SUBTITLE": "نظام تسجيل المقررات بالساعات المعتمدة",
+    "CHOOSE_ROLE": "اختر",
+    "NATIONAL_ID": "الرقم القومي",
+    "PASSWORD": "كلمة المرور",
+    "LOGIN_BTN": "تسجيل الدخول",
+    "LOGGING_IN": "جاري الدخول...",
+    "FILL_ALL_FIELDS": "يرجى ملء جميع الحقول.",
+    "SUPPORT_TEXT": "إذا واجهت مشكلة،",
+    "CONTACT_LINK": "تواصل مع شؤون الطلاب."
+  },
+  "DASHBOARD": {
+    "GREETING": "مرحباً، {{name}}",
+    "WELCOME_SUB": "راجع مقرراتك المسجلة وساعاتك.",
+    "GPA_MAX_HOURS": "الساعات القصوى تعتمد على المعدل",
+    "GPA": "المعدل التراكمي",
+    "AVAILABLE_HOURS": "الساعات المتاحة",
+    "PASSED_HOURS": "الساعات المجتازة",
+    "REGISTERED_COURSES": "المقررات المسجلة",
+    "COURSES_COUNT": "{{count}} مقررات",
+    "HRS_VALUE": "{{value}} ساعة",
+    "HOURS_ANALYTICS": "تحليل الساعات",
+    "USED_VS_AVAILABLE": "المستخدمة مقابل المتاحة",
+    "AVAILABLE": "متاحة",
+    "USED": "مستخدمة",
+    "DATA_BASED_ON_GPA": "البيانات مبنية على المعدل",
+    "DOWNLOAD_PDF": "تحميل PDF",
+    "CODE": "الكود",
+    "COURSE_NAME": "اسم المقرر",
+    "HOURS": "الساعات",
+    "PROF": "الأستاذ",
+    "ACTION": "الإجراء",
+    "DELETE": "حذف",
+    "HOURS_UNIT": "ساعات",
+    "NO_COURSES": "لا توجد مقررات مسجلة بعد."
+  },
+  "REGISTER": {
+    "TITLE": "تسجيل المقررات",
+    "SUBTITLE": "اختر مقرراتك للفصل الدراسي الحالي",
+    "COURSE_CODE": "كود المقرر",
+    "COURSE_NAME": "اسم المقرر",
+    "CREDIT_HOURS": "الساعات المعتمدة",
+    "PREREQUISITES": "المتطلبات السابقة",
+    "STATUS": "الحالة",
+    "REQUIREMENTS": "المتطلبات",
+    "ACTION": "الإجراء",
+    "VIEW_REQUIREMENTS": "عرض المتطلبات",
+    "REGISTER_BTN": "تسجيل",
+    "REGISTERED": "مسجل",
+    "PREREQ_MSG": "المتطلب السابق غير مكتمل — يجب اجتياز {{course}} قبل تسجيل هذا المقرر.",
+    "SUMMARY_TITLE": "ملخص التسجيل",
+    "REGISTERED_COURSES_LABEL": "المقررات المسجلة:",
+    "TOTAL_CREDIT_HOURS": "إجمالي الساعات المعتمدة:",
+    "CONFIRM": "تأكيد",
+    "NO_COURSES_SELECTED": "لم يتم اختيار مقررات.",
+    "SUCCESS": "تم تسجيل المقررات بنجاح!"
+  },
+  "GRADES": {
+    "TITLE": "الدرجات",
+    "COURSE_NAME": "اسم المقرر",
+    "SEMESTER": "الفصل الدراسي",
+    "GRADE": "الدرجة",
+    "RECOGNITION": "التقدير",
+    "NO_GRADES": "لا توجد درجات متاحة."
+  },
+  "PROFILE": {
+    "TITLE": "الملف الشخصي",
+    "NAME": "الاسم",
+    "EMAIL": "البريد الجامعي",
+    "YEAR": "سنة الدراسة",
+    "DEPARTMENT": "القسم",
+    "STUDENT_ID": "الرقم الجامعي",
+    "GPA": "المعدل التراكمي",
+    "DEFAULT_EMAIL": "اسمك@university.edu"
+  },
+  "NAVBAR": {
+    "SUBTITLE": "نظام تسجيل المقررات",
+    "SEARCH": "ابحث بالمقرر أو الكود",
+    "NOTIFICATIONS": "الإشعارات"
+  },
+  "SIDEBAR": {
+    "DASHBOARD": "الرئيسية",
+    "REGISTER_COURSES": "تسجيل المقررات",
+    "GRADES": "الدرجات",
+    "PROFILE": "الملف الشخصي",
+    "LOGOUT": "تسجيل الخروج"
+  },
+  "ROLES": {
+    "STUDENT": "طالب",
+    "ADMIN": "مسؤول"
+  },
+  "LANG": {
+    "SWITCH": "English",
+    "CURRENT": "AR"
+  }
+}

@@ -1,0 +1,77 @@
+<div class="p-4 sm:p-6">
+
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 max-w-2xl p-6 sm:p-8">
+
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
+      <div class="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0" style="background-color: var(--color-primary)">
+        <ion-icon name="person-outline" class="text-white text-3xl"></ion-icon>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">{{ 'PROFILE.TITLE' | translate }}</h2>
+        <p class="text-slate-500 text-sm mt-0.5">{{ student()?.name }}</p>
+      </div>
+    </div>
+
+    @if (student(); as s) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+            {{ 'PROFILE.NAME' | translate }}
+          </label>
+          <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 bg-slate-50">
+            {{ s.name }}
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+            {{ 'PROFILE.EMAIL' | translate }}
+          </label>
+          <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 bg-slate-50">
+            {{ s.email || ('PROFILE.DEFAULT_EMAIL' | translate) }}
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+            {{ 'PROFILE.YEAR' | translate }}
+          </label>
+          <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 bg-slate-50">
+            {{ s.yearOfStudy }}
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+            {{ 'PROFILE.DEPARTMENT' | translate }}
+          </label>
+          <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 bg-slate-50">
+            {{ s.department }}
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+            {{ 'PROFILE.STUDENT_ID' | translate }}
+          </label>
+          <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono text-slate-700 bg-slate-50">
+            {{ s.studentId }}
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+            {{ 'PROFILE.GPA' | translate }}
+          </label>
+          <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold bg-slate-50" style="color: var(--color-primary)">
+            {{ s.gpa }}
+          </div>
+        </div>
+
+      </div>
+    }
+  </div>
+
+</div>

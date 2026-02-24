@@ -1,0 +1,52 @@
+<header class="bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-3 shadow-sm shrink-0">
+
+  <!-- Hamburger (mobile only) -->
+  <button
+    class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors shrink-0"
+    (click)="layout.toggle()"
+  >
+    <ion-icon name="menu-outline" class="text-xl block"></ion-icon>
+  </button>
+
+  <!-- Brand -->
+  <div class="flex-1 min-w-0">
+    <h2 class="text-base font-bold truncate" style="color: var(--color-primary)">UniSmart</h2>
+    <p class="text-xs text-slate-500 truncate hidden sm:block">{{ 'NAVBAR.SUBTITLE' | translate }}</p>
+  </div>
+
+  <!-- Search (hidden on small screens) -->
+  <div class="hidden md:flex items-center gap-2 border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus-within:border-accent transition-colors">
+    <ion-icon name="search-outline" class="text-slate-400 shrink-0"></ion-icon>
+    <input
+      type="text"
+      [placeholder]="'NAVBAR.SEARCH' | translate"
+      [(ngModel)]="searchQuery"
+      class="bg-transparent text-sm text-slate-700 outline-none w-36"
+    />
+  </div>
+
+  <!-- Language toggle -->
+  <button
+    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-semibold transition-colors shrink-0 hover:opacity-80"
+    style="border-color: var(--color-accent); color: var(--color-accent)"
+    (click)="langService.toggleLang()"
+    [title]="'LANG.SWITCH' | translate"
+  >
+    <ion-icon name="language-outline" class="text-base"></ion-icon>
+    <span class="hidden sm:inline">{{ 'LANG.SWITCH' | translate }}</span>
+  </button>
+
+  <!-- Notifications -->
+  <button
+    class="relative w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 shrink-0"
+    [title]="'NAVBAR.NOTIFICATIONS' | translate"
+  >
+    <ion-icon name="notifications-outline" class="text-lg"></ion-icon>
+    @if (notifications > 0) {
+      <span class="absolute -top-0.5 -end-0.5 bg-red-500 text-white text-[0.6rem] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+        {{ notifications }}
+      </span>
+    }
+  </button>
+
+</header>
