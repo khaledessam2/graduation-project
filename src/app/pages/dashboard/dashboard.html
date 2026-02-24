@@ -1,129 +1,116 @@
-<div class="p-4 sm:p-6 space-y-6">
+<div class="p-4 sm:p-6 space-y-5">
 
   <!-- Welcome row -->
-  <div class="flex flex-wrap items-start justify-between gap-4">
+  <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
-      <h2 class="text-xl font-bold text-slate-800">
+      <h2 class="text-2xl font-bold text-slate-800">
         {{ 'DASHBOARD.GREETING' | translate:{ name: (student()?.name ?? '').split(' ')[0] } }}
       </h2>
-      <p class="text-slate-500 text-sm mt-0.5">{{ 'DASHBOARD.WELCOME_SUB' | translate }}</p>
+      <p class="text-slate-500 text-sm mt-1">{{ 'DASHBOARD.WELCOME_SUB' | translate }}</p>
     </div>
-    <div class="flex flex-col items-end bg-white rounded-2xl px-4 py-3 shadow-sm border border-slate-100">
-      <span class="text-sm font-bold" style="color: var(--color-primary)">
-        {{ 'DASHBOARD.GPA' | translate }}: {{ student()?.gpa | number:'1.2-2' }}
-      </span>
-      <span class="text-xs text-slate-400 mt-0.5">{{ 'DASHBOARD.GPA_MAX_HOURS' | translate }}</span>
+    <div class="rounded-xl px-5 py-3 text-end" style="background-color: var(--color-primary)">
+      <p class="text-white text-sm font-bold">{{ 'DASHBOARD.GPA' | translate }}: {{ student()?.gpa | number:'1.2-2' }}</p>
+      <p class="text-white text-xs mt-0.5" style="opacity: 0.75">{{ 'DASHBOARD.GPA_MAX_HOURS' | translate }}</p>
     </div>
   </div>
 
-  <!-- Stat cards -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  <!-- Stats cards + Analytics side by side -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-      <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.GPA' | translate }}</span>
-        <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
-          <ion-icon name="school-outline" class="text-base" style="color: var(--color-primary)"></ion-icon>
+    <!-- 2x2 stat cards -->
+    <div class="lg:col-span-2 grid grid-cols-2 gap-4">
+
+      <!-- GPA -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-sm text-slate-500">{{ 'DASHBOARD.GPA' | translate }}</span>
+          <ion-icon name="school-outline" class="text-xl text-slate-300"></ion-icon>
         </div>
+        <p class="text-2xl font-bold text-slate-800">{{ student()?.gpa | number:'1.2-2' }}</p>
       </div>
-      <p class="text-2xl font-bold text-slate-800">{{ student()?.gpa | number:'1.2-2' }}</p>
-    </div>
 
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-      <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.AVAILABLE_HOURS' | translate }}</span>
-        <div class="w-8 h-8 rounded-xl bg-purple-50 flex items-center justify-center">
-          <ion-icon name="time-outline" class="text-base text-purple-500"></ion-icon>
+      <!-- Available Hours -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-sm text-slate-500">{{ 'DASHBOARD.AVAILABLE_HOURS' | translate }}</span>
+          <ion-icon name="time-outline" class="text-xl text-slate-300"></ion-icon>
         </div>
+        <p class="text-2xl font-bold text-slate-800">{{ 'DASHBOARD.HRS_VALUE' | translate:{ value: student()?.availableHours } }}</p>
       </div>
-      <p class="text-2xl font-bold text-slate-800">{{ student()?.availableHours }}</p>
-    </div>
 
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-      <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.PASSED_HOURS' | translate }}</span>
-        <div class="w-8 h-8 rounded-xl bg-green-50 flex items-center justify-center">
-          <ion-icon name="checkmark-circle-outline" class="text-base text-green-500"></ion-icon>
+      <!-- Passed Hours -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-sm text-slate-500">{{ 'DASHBOARD.PASSED_HOURS' | translate }}</span>
+          <ion-icon name="checkmark-circle-outline" class="text-xl text-slate-300"></ion-icon>
         </div>
+        <p class="text-2xl font-bold text-slate-800">{{ 'DASHBOARD.HRS_VALUE' | translate:{ value: student()?.passedHours } }}</p>
       </div>
-      <p class="text-2xl font-bold text-slate-800">{{ student()?.passedHours }}</p>
-    </div>
 
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-      <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-medium text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.REGISTERED_COURSES' | translate }}</span>
-        <div class="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center">
-          <ion-icon name="book-outline" class="text-base text-orange-500"></ion-icon>
+      <!-- Registered Courses -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-sm text-slate-500">{{ 'DASHBOARD.REGISTERED_COURSES' | translate }}</span>
+          <ion-icon name="book-outline" class="text-xl text-slate-300"></ion-icon>
         </div>
+        <p class="text-2xl font-bold text-slate-800">
+          {{ 'DASHBOARD.COURSES_COUNT' | translate:{ count: registeredCourses().length } }}
+        </p>
       </div>
-      <p class="text-2xl font-bold text-slate-800">{{ registeredCourses().length }}</p>
-    </div>
-  </div>
 
-  <!-- Hours Analytics -->
-  <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-    <div class="flex items-start justify-between mb-4">
-      <div>
-        <h3 class="text-sm font-semibold text-slate-700">{{ 'DASHBOARD.HOURS_ANALYTICS' | translate }}</h3>
-        <p class="text-xs text-slate-400 mt-0.5">{{ 'DASHBOARD.USED_VS_AVAILABLE' | translate }}</p>
-      </div>
     </div>
-    <div class="flex items-center gap-8 flex-wrap">
+
+    <!-- Hours Analytics card (right column) -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex flex-col">
+      <div class="flex items-start justify-between mb-5">
+        <span class="text-sm font-semibold text-slate-700">{{ 'DASHBOARD.HOURS_ANALYTICS' | translate }}</span>
+        <span class="text-xs text-slate-400">{{ 'DASHBOARD.USED_VS_AVAILABLE' | translate }}</span>
+      </div>
+
       <!-- Donut chart -->
-      <div class="relative w-24 h-24 shrink-0">
-        <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
-          <circle
-            fill="none" stroke="#e2e8f0" stroke-width="3.8"
-            cx="18" cy="18" r="15.9"
-          />
-          <circle
-            fill="none" stroke="#1a3a5c" stroke-width="3.8"
-            stroke-linecap="round"
-            cx="18" cy="18" r="15.9"
-            [style.stroke-dasharray]="usedPercent() + ' ' + (100 - usedPercent())"
-            stroke-dashoffset="0"
-          />
-        </svg>
-        <span class="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-700">
-          {{ usedPercent() }}%
-        </span>
+      <div class="flex items-center justify-center mb-5">
+        <div class="relative w-28 h-28">
+          <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
+            <circle fill="none" stroke="#e2e8f0" stroke-width="3.5" cx="18" cy="18" r="15.9" />
+            <circle
+              fill="none" stroke="#1a3a5c" stroke-width="3.5"
+              stroke-linecap="round"
+              cx="18" cy="18" r="15.9"
+              [style.stroke-dasharray]="usedPercent() + ' ' + (100 - usedPercent())"
+              stroke-dashoffset="0"
+            />
+          </svg>
+          <span class="absolute inset-0 flex items-center justify-center text-base font-bold text-slate-700">
+            {{ usedPercent() }}%
+          </span>
+        </div>
       </div>
-      <!-- Stats -->
-      <div class="flex-1 min-w-0 space-y-2.5">
+
+      <!-- Stats rows -->
+      <div class="space-y-3 flex-1">
         <div class="flex items-center justify-between text-sm">
           <span class="text-slate-500">{{ 'DASHBOARD.AVAILABLE' | translate }}</span>
-          <span class="font-semibold text-slate-700">
-            {{ 'DASHBOARD.HRS_VALUE' | translate:{ value: student()?.availableHours } }}
-          </span>
+          <span class="font-semibold text-slate-700">{{ 'DASHBOARD.HRS_VALUE' | translate:{ value: student()?.availableHours } }}</span>
         </div>
         <div class="flex items-center justify-between text-sm">
           <span class="text-slate-500">{{ 'DASHBOARD.USED' | translate }}</span>
-          <span class="font-semibold text-slate-700">
-            {{ 'DASHBOARD.HRS_VALUE' | translate:{ value: usedHours() } }}
-          </span>
+          <span class="font-semibold text-slate-700">{{ usedHours() }}</span>
         </div>
-        <!-- Progress bar -->
-        <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
-          <div
-            class="h-2 rounded-full transition-all"
-            style="background-color: var(--color-primary)"
-            [style.width.%]="usedPercent()"
-          ></div>
-        </div>
-        <p class="text-xs text-slate-400">{{ 'DASHBOARD.DATA_BASED_ON_GPA' | translate }}</p>
+        <p class="text-xs text-slate-400 pt-1">{{ 'DASHBOARD.DATA_BASED_ON_GPA' | translate }}</p>
       </div>
     </div>
+
   </div>
 
   <!-- Registered Courses Table -->
   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+
     <div class="flex items-center justify-between px-5 py-3.5" style="background-color: var(--color-primary)">
       <span class="text-white text-sm font-semibold">{{ 'DASHBOARD.REGISTERED_COURSES' | translate }}</span>
       <button
-        class="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+        class="text-white text-xs font-medium hover:underline transition-colors"
         (click)="downloadPdf()"
       >
-        <ion-icon name="download-outline" class="text-base"></ion-icon>
         {{ 'DASHBOARD.DOWNLOAD_PDF' | translate }}
       </button>
     </div>
@@ -131,24 +118,25 @@
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
-          <tr class="bg-slate-50 border-b border-slate-100">
-            <th class="text-start px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.CODE' | translate }}</th>
-            <th class="text-start px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.COURSE_NAME' | translate }}</th>
-            <th class="text-start px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.HOURS' | translate }}</th>
-            <th class="text-start px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.PROF' | translate }}</th>
-            <th class="text-start px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ 'DASHBOARD.ACTION' | translate }}</th>
+          <tr class="border-b border-slate-100">
+            <th class="text-center px-4 py-3 text-xs font-semibold text-slate-600">{{ 'DASHBOARD.CODE' | translate }}</th>
+            <th class="text-center px-4 py-3 text-xs font-semibold text-slate-600">{{ 'DASHBOARD.COURSE_NAME' | translate }}</th>
+            <th class="text-center px-4 py-3 text-xs font-semibold text-slate-600">{{ 'DASHBOARD.HOURS' | translate }}</th>
+            <th class="text-center px-4 py-3 text-xs font-semibold text-slate-600">{{ 'DASHBOARD.PROF' | translate }}</th>
+            <th class="text-center px-4 py-3 text-xs font-semibold text-slate-600">{{ 'DASHBOARD.ACTION' | translate }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
           @for (course of registeredCourses(); track course.id) {
             <tr class="hover:bg-slate-50 transition-colors">
-              <td class="px-4 py-3 font-mono text-xs font-semibold text-slate-500">{{ course.code }}</td>
-              <td class="px-4 py-3 font-medium text-slate-700">{{ course.name }}</td>
-              <td class="px-4 py-3 text-slate-600">{{ course.hours }} {{ 'DASHBOARD.HOURS_UNIT' | translate }}</td>
-              <td class="px-4 py-3 text-slate-600">{{ course.professor }}</td>
-              <td class="px-4 py-3">
+              <td class="px-4 py-3 text-center text-sm font-semibold text-red-500">{{ course.code }}</td>
+              <td class="px-4 py-3 text-center text-slate-700">{{ course.name }}</td>
+              <td class="px-4 py-3 text-center text-slate-600">{{ course.hours }} {{ 'DASHBOARD.HOURS_UNIT' | translate }}</td>
+              <td class="px-4 py-3 text-center text-slate-600">{{ course.professor }}</td>
+              <td class="px-4 py-3 text-center">
                 <button
-                  class="px-3 py-1 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                  class="text-sm font-medium hover:underline transition-colors"
+                  style="color: var(--color-accent)"
                   (click)="deleteCourse(course.id)"
                 >
                   {{ 'DASHBOARD.DELETE' | translate }}

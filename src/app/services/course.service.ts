@@ -15,12 +15,11 @@ export class CourseService {
   ]);
 
   registeredCourses = signal<RegisteredCourse[]>([
-    { id: 1, code: 'CS105', name: 'Algorithms', hours: 3, professor: 'Dr.Osama' },
-    { id: 2, code: 'CS105', name: 'Algorithms', hours: 3, professor: 'Dr.Osama' },
-    { id: 3, code: 'CS105', name: 'Algorithms', hours: 3, professor: 'Dr.Osama' },
-    { id: 4, code: 'CS105', name: 'Algorithms', hours: 3, professor: 'Dr.Osama' },
-    { id: 5, code: 'CS105', name: 'Algorithms', hours: 3, professor: 'Dr.Osama' },
-    { id: 6, code: 'CS106', name: 'Algorithms', hours: 3, professor: 'Dr.Osama' },
+    { id: 1, code: 'CS201', name: 'Data Structures',     hours: 3, professor: 'Dr.Osama'  },
+    { id: 2, code: 'CS202', name: 'Algorithms',          hours: 3, professor: 'Dr.Ahmed'  },
+    { id: 3, code: 'CS203', name: 'Database Systems',    hours: 3, professor: 'Dr.Sara'   },
+    { id: 4, code: 'CS204', name: 'Operating Systems',   hours: 3, professor: 'Dr.Mona'   },
+    { id: 5, code: 'CS205', name: 'Computer Networks',   hours: 3, professor: 'Dr.Khaled' },
   ]);
 
   grades = signal<Grade[]>([
