@@ -11,7 +11,7 @@
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
-          <tr class="border-b border-slate-100" style="background-color: var(--color-primary)">
+          <tr class="border-b border-slate-100 bg-[#075392E0]" >
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.COURSE_CODE' | translate }}</th>
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.COURSE_NAME' | translate }}</th>
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.CREDIT_HOURS' | translate }}</th>
@@ -58,8 +58,7 @@
                   </button>
                 } @else {
                   <button
-                    class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                    style="background-color: var(--color-primary)"
+                    class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors bg-[#075392E0]"
                     [disabled]="course.status !== 'Available'"
                     (click)="register(course)"
                   >
@@ -85,19 +84,20 @@
   </div>
 
   <!-- Summary + Confirm -->
-  <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 text-center space-y-4">
-    <h3 class="text-sm font-semibold text-slate-700">{{ 'REGISTER.SUMMARY_TITLE' | translate }}</h3>
+  <div class="bg-white mb-0 rounded-2xl p-6 shadow-sm border border-slate-100 text-center space-y-4">
+    <h3 class="text-lg font-semibold text-[#075392E0]">{{ 'REGISTER.SUMMARY_TITLE' | translate }}</h3>
 
-    <div class="flex justify-center gap-8 flex-wrap">
-      <div class="text-center">
+    <div class="flex justify-start flex-wrap">
+      <div class="flex justify-between w-full items-center">
+        <p class="text-2x text-slate-500 mt-0.5">{{ 'REGISTER.REGISTERED_COURSES_LABEL' | translate }}</p>
         <p class="text-2xl font-bold text-slate-800">{{ pendingCount() }}</p>
-        <p class="text-xs text-slate-500 mt-0.5">{{ 'REGISTER.REGISTERED_COURSES_LABEL' | translate }}</p>
+
       </div>
-      <div class="text-center">
+      <div class="flex justify-between w-full items-center">
+        <p class="text-2x text-slate-500 mt-0.5">{{ 'REGISTER.TOTAL_CREDIT_HOURS' | translate }}</p>
         <p class="text-2xl font-bold" style="color: var(--color-primary)">
           {{ pendingHoursTotal() }}<span class="text-slate-400 text-lg font-normal">/{{ availableHours() }}</span>
         </p>
-        <p class="text-xs text-slate-500 mt-0.5">{{ 'REGISTER.TOTAL_CREDIT_HOURS' | translate }}</p>
       </div>
     </div>
 
@@ -112,9 +112,7 @@
     }
 
     <button
-      class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl text-white text-sm font-semibold hover:opacity-90 transition-all min-w-[220px]"
-      style="background-color: var(--color-primary)"
-      (click)="confirm()"
+      class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl text-white text-sm font-semibold hover:opacity-90 transition-all w-full bg-[#075392E0]"      (click)="confirm()"
     >
       <ion-icon name="checkmark-circle-outline" class="text-lg"></ion-icon>
       {{ 'REGISTER.CONFIRM' | translate }}

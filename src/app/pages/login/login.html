@@ -1,14 +1,14 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-200 via-blue-100 to-slate-100 flex items-center justify-center p-6">
-  <div class="bg-white rounded-2xl p-8 w-full max-w-sm shadow-xl">
+  <div class="rounded-2xl p-8 w-full max-w-sm shadow-xl
+     bg-[linear-gradient(to_bottom,#3E6F9C_0%,#7FA0BD_25%,#E6ECF2_40%,#ffffff)]">
 
     <!-- Header -->
     <div class="text-center mb-8">
-      <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-        <img src="assets/logo.png" alt="UniSmart" class="h-10 w-10 object-contain" onerror="this.style.display='none'" />
-        <ion-icon name="school-outline" class="text-3xl" style="color: var(--color-primary)"></ion-icon>
+      <div class="w-24 mx-auto mb-4">
+        <img src="assets/images/logo.png" alt="UniSmart" class=" w-full object-contain" onerror="this.style.display='none'" />
       </div>
-      <h1 class="text-2xl font-bold" style="color: var(--color-primary)">UniSmart</h1>
-      <p class="text-slate-500 text-sm mt-1">{{ 'LOGIN.SUBTITLE' | translate }}</p>
+      <h1 class="text-3xl font-bold" style="color: var(--color-primary)">UniSmart</h1>
+      <p class="text-[#939393] text-sm mt-1">{{ 'LOGIN.SUBTITLE' | translate }}</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="flex flex-col gap-4">
