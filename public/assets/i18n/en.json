@@ -33,7 +33,11 @@
     "ACTION": "Action",
     "DELETE": "Delete",
     "HOURS_UNIT": "Hours",
-    "NO_COURSES": "No registered courses yet."
+    "NO_COURSES": "No registered courses yet.",
+    "DELETE_CONFIRM_HEADER": "Confirm Delete",
+    "DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete this course?",
+    "YES": "Yes",
+    "NO": "No"
   },
   "REGISTER": {
     "TITLE": "Register Courses",

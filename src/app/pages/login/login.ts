@@ -1,17 +1,19 @@
-import { Component, inject, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, inject, signal, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { LanguageService } from '../../services/language.service';
+import { Select } from 'primeng/select';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, TranslateModule],
+  imports: [FormsModule, TranslateModule, Select],
   templateUrl: './login.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);
   private router = inject(Router);
   private translate = inject(TranslateService);
@@ -24,10 +26,24 @@ export class LoginComponent {
   errorMsg = signal('');
   loading = signal(false);
 
-  roles = [
-    { value: 'Student', key: 'ROLES.STUDENT' },
-    { value: 'Admin',   key: 'ROLES.ADMIN'   },
-  ];
+  roles: { value: string; label: string }[] = [];
+  private langSub!: Subscription;
+
+  ngOnInit(): void {
+    this.buildRoles();
+    this.langSub = this.translate.onLangChange.subscribe(() => this.buildRoles());
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
+  }
+
+  private buildRoles(): void {
+    this.roles = [
+      { value: 'Student', label: this.translate.instant('ROLES.STUDENT') },
+      { value: 'Admin',   label: this.translate.instant('ROLES.ADMIN')   },
+    ];
+  }
 
   onSubmit(): void {
     if (!this.role || !this.nationalId || !this.password) {

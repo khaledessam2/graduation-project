@@ -33,7 +33,11 @@
     "ACTION": "الإجراء",
     "DELETE": "حذف",
     "HOURS_UNIT": "ساعات",
-    "NO_COURSES": "لا توجد مقررات مسجلة بعد."
+    "NO_COURSES": "لا توجد مقررات مسجلة بعد.",
+    "DELETE_CONFIRM_HEADER": "تأكيد الحذف",
+    "DELETE_CONFIRM_MESSAGE": "هل أنت متأكد من حذف هذا المقرر؟",
+    "YES": "نعم",
+    "NO": "لا"
   },
   "REGISTER": {
     "TITLE": "تسجيل المقررات",

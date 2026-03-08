@@ -14,22 +14,15 @@
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="flex flex-col gap-4">
 
       <!-- Role Select -->
-      <div class="relative">
-        <select
-          [(ngModel)]="role"
-          name="role"
-          class="w-full px-4 py-3 border-[1.5px] border-slate-300 rounded-xl text-sm text-slate-700 bg-white appearance-none outline-none focus:border-slate-500 transition-colors"
-        >
-          <option value="" disabled selected>{{ 'LOGIN.CHOOSE_ROLE' | translate }}</option>
-          @for (r of roles; track r.value) {
-            <option [value]="r.value">{{ r.key | translate }}</option>
-          }
-        </select>
-        <ion-icon
-          name="chevron-down-outline"
-          class="absolute end-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-        ></ion-icon>
-      </div>
+      <p-select
+        [(ngModel)]="role"
+        name="role"
+        [options]="roles"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="'LOGIN.CHOOSE_ROLE' | translate"
+        class="w-full"
+      />
 
       <!-- National ID -->
       <div class="flex items-center border-[1.5px] border-slate-300 rounded-xl bg-white focus-within:border-slate-500 transition-colors">

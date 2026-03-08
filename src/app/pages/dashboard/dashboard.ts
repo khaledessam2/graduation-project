@@ -2,17 +2,21 @@ import { Component, inject, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/co
 import { AuthService } from '../../services/auth.service';
 import { CourseService } from '../../services/course.service';
 import { DecimalPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DecimalPipe, TranslateModule],
+  imports: [DecimalPipe, TranslateModule, ConfirmDialog],
   templateUrl: './dashboard.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DashboardComponent {
   auth = inject(AuthService);
   courseService = inject(CourseService);
+  confirmationService = inject(ConfirmationService);
+  translate = inject(TranslateService);
 
   student = this.auth.currentUser;
 
@@ -26,7 +30,17 @@ export class DashboardComponent {
   });
 
   deleteCourse(id: number): void {
-    this.courseService.deleteCourse(id);
+    this.confirmationService.confirm({
+      message: this.translate.instant('DASHBOARD.DELETE_CONFIRM_MESSAGE'),
+      header: this.translate.instant('DASHBOARD.DELETE_CONFIRM_HEADER'),
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      acceptLabel: this.translate.instant('DASHBOARD.YES'),
+      rejectLabel: this.translate.instant('DASHBOARD.NO'),
+      accept: () => {
+        this.courseService.deleteCourse(id);
+      },
+    });
   }
 
   downloadPdf(): void {
