@@ -88,7 +88,8 @@
     "REGISTER_COURSES": "تسجيل المقررات",
     "GRADES": "الدرجات",
     "PROFILE": "الملف الشخصي",
-    "LOGOUT": "تسجيل الخروج"
+    "LOGOUT": "تسجيل الخروج",
+    "COLLAPSE": "طي الشريط"
   },
   "ROLES": {
     "STUDENT": "طالب",
