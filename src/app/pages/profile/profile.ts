@@ -1,5 +1,5 @@
-import { Component, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { Component, inject, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { ProfileService } from '../../services/profile.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -8,7 +8,12 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './profile.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ProfileComponent {
-  auth = inject(AuthService);
-  student = this.auth.currentUser;
+export class ProfileComponent implements OnInit {
+  profileService = inject(ProfileService);
+  student = this.profileService.profile;
+  loading = this.profileService.loading;
+
+  ngOnInit(): void {
+    this.profileService.loadProfile().subscribe();
+  }
 }

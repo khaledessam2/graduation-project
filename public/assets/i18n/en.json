@@ -58,7 +58,13 @@
     "TOTAL_CREDIT_HOURS": "Total Credit Hours:",
     "CONFIRM": "Confirm",
     "NO_COURSES_SELECTED": "No courses selected.",
-    "SUCCESS": "Courses registered successfully!"
+    "SUCCESS": "Courses registered successfully!",
+    "TOAST_TITLE": "Registered",
+    "TOAST_MSG": "Course {{course}} has been registered successfully",
+    "NO_COURSES": "No courses available for registration at the moment",
+    "UNREGISTER_BTN": "Unregister",
+    "UNREGISTER_TOAST_TITLE": "Unregistered",
+    "UNREGISTER_TOAST_MSG": "Course {{course}} has been unregistered"
   },
   "GRADES": {
     "TITLE": "Grades",
