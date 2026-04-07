@@ -1,3 +1,4 @@
+<p-toast position="top-right" />
 <p-confirmDialog />
 <div class="p-4 sm:p-6 space-y-5">
 
@@ -136,7 +137,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
-          @for (course of registeredCourses(); track course.id) {
+          @for (course of filteredCourses(); track course.id) {
             <tr class="hover:bg-slate-50 transition-colors">
               <td class="px-4 py-3 text-center text-sm font-semibold text-red-500">{{ course.code }}</td>
               <td class="px-4 py-3 text-center text-slate-700">{{ course.name }}</td>
@@ -144,10 +145,10 @@
               <td class="px-4 py-3 text-center text-slate-600">{{ course.professor }}</td>
               <td class="px-4 py-3 text-center">
                 <button
-                  class="text-sm font-medium hover:underline transition-colors"
-                  style="color: var(--color-accent)"
-                  (click)="deleteCourse(course.id)"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors"
+                  (click)="deleteCourse(course.code)"
                 >
+                  <i class="pi pi-trash text-xs"></i>
                   {{ 'DASHBOARD.DELETE' | translate }}
                 </button>
               </td>
@@ -155,8 +156,12 @@
           }
           @empty {
             <tr>
-              <td colspan="5" class="px-4 py-8 text-center text-slate-400 text-sm">
-                {{ 'DASHBOARD.NO_COURSES' | translate }}
+              <td colspan="5" class="px-4 py-16 text-center">
+                <div class="flex flex-col items-center gap-3">
+                  <ion-icon name="search-outline" class="text-4xl text-slate-300"></ion-icon>
+                  <p class="text-slate-500 font-medium">{{ 'DASHBOARD.NO_COURSES' | translate }}</p>
+                  <p class="text-slate-400 text-xs">{{ 'DASHBOARD.NO_COURSES_SUB' | translate }}</p>
+                </div>
               </td>
             </tr>
           }

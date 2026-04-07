@@ -33,11 +33,16 @@
     "ACTION": "Action",
     "DELETE": "Delete",
     "HOURS_UNIT": "Hours",
-    "NO_COURSES": "No registered courses yet.",
+    "NO_COURSES": "No registered courses found.",
+    "NO_COURSES_SUB": "Try searching with a different name or course code.",
     "DELETE_CONFIRM_HEADER": "Confirm Delete",
     "DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete this course?",
     "YES": "Yes",
-    "NO": "No"
+    "NO": "No",
+    "DROP_SUCCESS_TITLE": "Course Dropped",
+    "DROP_SUCCESS_MSG": "Course has been dropped successfully",
+    "DROP_ERROR_TITLE": "Error",
+    "DROP_ERROR_MSG": "Failed to drop the course, please try again"
   },
   "REGISTER": {
     "TITLE": "Register Courses",

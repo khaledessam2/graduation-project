@@ -14,6 +14,7 @@ export class DashboardService {
   registeredCourses = signal<RegisteredCourse[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+  searchQuery = signal('');
 
   loadDashboard(): Observable<any> {
     this.loading.set(true);
@@ -50,8 +51,25 @@ export class DashboardService {
       );
   }
 
-  deleteCourse(id: number): void {
-    this.registeredCourses.set(this.registeredCourses().filter((c) => c.id !== id));
+  deleteCourse(courseCode: string): Observable<any> {
+    return this.http
+      .delete<any>(`${this.apiUrl}/api/unregister-course`, {
+        body: {
+          university_id: this.auth.getUniversityId(),
+          course_code: courseCode,
+        },
+      })
+      .pipe(
+        tap(() => {
+          this.registeredCourses.set(
+            this.registeredCourses().filter((c) => c.code !== courseCode)
+          );
+        }),
+        catchError((err) => {
+          this.error.set(err.error?.message ?? 'Failed to unregister course');
+          return of(null);
+        })
+      );
   }
 
   get totalRegisteredHours(): number {
