@@ -27,16 +27,19 @@
     <p class="text-xs text-slate-500 truncate hidden sm:block">{{ 'NAVBAR.SUBTITLE' | translate }}</p>
   </div>
 
-  <!-- Search (hidden on small screens) -->
-  <div class="hidden md:flex items-center w-[40%] gap-2 border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus-within:border-accent transition-colors">
-    <ion-icon name="search-outline" class="text-slate-400 shrink-0"></ion-icon>
-    <input
-      type="text"
-      [placeholder]="'NAVBAR.SEARCH' | translate"
-      [(ngModel)]="searchQuery"
-      class="bg-transparent text-sm text-slate-700 outline-none w-36"
-    />
-  </div>
+  <!-- Search (dashboard only) -->
+  @if (isDashboard) {
+    <div class="hidden md:flex items-center w-[40%] gap-2 border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus-within:border-accent transition-colors">
+      <ion-icon name="search-outline" class="text-slate-400 shrink-0"></ion-icon>
+      <input
+        type="text"
+        [placeholder]="'NAVBAR.SEARCH' | translate"
+        [ngModel]="dashboardService.searchQuery()"
+        (ngModelChange)="dashboardService.searchQuery.set($event)"
+        class="bg-transparent text-sm text-slate-700 outline-none w-36"
+      />
+    </div>
+  }
 
   <!-- Language toggle -->
   <button
@@ -50,7 +53,7 @@
   </button>
 
   <!-- Notifications -->
-  <button
+  <!-- <button
     class="relative w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 shrink-0"
     [title]="'NAVBAR.NOTIFICATIONS' | translate"
   >
@@ -60,6 +63,6 @@
         {{ notifications }}
       </span>
     }
-  </button>
+  </button> -->
 
 </header>

@@ -33,11 +33,16 @@
     "ACTION": "الإجراء",
     "DELETE": "حذف",
     "HOURS_UNIT": "ساعات",
-    "NO_COURSES": "لا توجد مقررات مسجلة بعد.",
+    "NO_COURSES": "لا توجد مقررات مطابقة.",
+    "NO_COURSES_SUB": "جرّب البحث باسم مختلف أو كود المادة.",
     "DELETE_CONFIRM_HEADER": "تأكيد الحذف",
     "DELETE_CONFIRM_MESSAGE": "هل أنت متأكد من حذف هذا المقرر؟",
     "YES": "نعم",
-    "NO": "لا"
+    "NO": "لا",
+    "DROP_SUCCESS_TITLE": "تم الحذف",
+    "DROP_SUCCESS_MSG": "تم حذف المقرر بنجاح",
+    "DROP_ERROR_TITLE": "خطأ",
+    "DROP_ERROR_MSG": "فشل حذف المقرر، حاول مرة أخرى"
   },
   "REGISTER": {
     "TITLE": "تسجيل المقررات",
