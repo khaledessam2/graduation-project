@@ -54,19 +54,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loading.set(true);
     this.errorMsg.set('');
 
-    // TODO: Replace with real API call via AuthService
-    const result = this.auth.login({
-      role: this.role,
-      nationalId: this.nationalId,
-      password: this.password,
+    this.auth.login(this.nationalId, this.password).subscribe((result) => {
+      this.loading.set(false);
+      if (result.success) {
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.errorMsg.set(result.message);
+      }
     });
-
-    this.loading.set(false);
-
-    if (result.success) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.errorMsg.set(result.message);
-    }
   }
 }

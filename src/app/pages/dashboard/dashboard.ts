@@ -1,6 +1,6 @@
-import { Component, inject, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, inject, computed, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { CourseService } from '../../services/course.service';
+import { DashboardService } from '../../services/dashboard.service';
 import { DecimalPipe } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from 'primeng/api';
@@ -12,17 +12,22 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
   templateUrl: './dashboard.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   auth = inject(AuthService);
-  courseService = inject(CourseService);
+  dashboardService = inject(DashboardService);
   confirmationService = inject(ConfirmationService);
   translate = inject(TranslateService);
 
   student = this.auth.currentUser;
+  registeredCourses = this.dashboardService.registeredCourses;
 
-  registeredCourses = this.courseService.registeredCourses;
+  ngOnInit(): void {
+    this.dashboardService.loadDashboard().subscribe();
+  }
 
-  usedHours = computed(() => this.courseService.totalRegisteredHours);
+  usedHours = computed(() =>
+    this.dashboardService.registeredCourses().reduce((sum, c) => sum + c.hours, 0)
+  );
 
   usedPercent = computed(() => {
     const avail = this.student()?.availableHours ?? 1;
@@ -38,7 +43,7 @@ export class DashboardComponent {
       acceptLabel: this.translate.instant('DASHBOARD.YES'),
       rejectLabel: this.translate.instant('DASHBOARD.NO'),
       accept: () => {
-        this.courseService.deleteCourse(id);
+        this.dashboardService.deleteCourse(id);
       },
     });
   }

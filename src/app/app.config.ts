@@ -1,7 +1,8 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { apiInterceptor } from './interceptors/api.interceptor';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
@@ -65,10 +66,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([apiInterceptor])),
     provideTranslateService({ defaultLanguage: 'ar' }),
     provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' }),
     providePrimeNG({ theme: { preset: LightPreset, options: { darkModeSelector: 'none' } } }),
     ConfirmationService,
+    MessageService,
   ],
 };

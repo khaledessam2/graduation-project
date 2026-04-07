@@ -3,11 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../components/sidebar/sidebar';
 import { NavbarComponent } from '../components/navbar/navbar';
 import { LayoutService } from '../services/layout.service';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterOutlet, SidebarComponent, NavbarComponent],
+  imports: [RouterOutlet, SidebarComponent, NavbarComponent, Toast],
   template: `
+    <p-toast position="top-right" />
     @if (layout.sidebarOpen()) {
       <div
         class="fixed inset-0 bg-black/40 z-20 lg:hidden"

@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { CourseService } from '../../services/course.service';
+import { Component, inject, OnInit } from '@angular/core';
+import { GradesService } from '../../services/grades.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -7,9 +7,13 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [TranslateModule],
   templateUrl: './grades.html',
 })
-export class GradesComponent {
-  courseService = inject(CourseService);
-  grades = this.courseService.grades;
+export class GradesComponent implements OnInit {
+  gradesService = inject(GradesService);
+  grades = this.gradesService.grades;
+
+  ngOnInit(): void {
+    this.gradesService.loadGrades().subscribe();
+  }
 
   getGradeClass(recognition: string): string {
     if (['A+', 'A', 'A-'].includes(recognition)) return 'bg-green-100 text-green-800';

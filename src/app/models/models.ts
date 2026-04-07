@@ -39,7 +39,14 @@ export interface Grade {
 }
 
 export interface LoginRequest {
-  role: string;
-  nationalId: string;
+  university_id: string;
   password: string;
+}
+
+export interface LoginResponse {
+  token?: string;
+  user?: Partial<Student>;
+  message?: string;
+  success?: boolean;
+  university_id?: string;
 }

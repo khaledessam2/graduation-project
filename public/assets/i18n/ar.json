@@ -58,7 +58,13 @@
     "TOTAL_CREDIT_HOURS": "إجمالي الساعات المعتمدة:",
     "CONFIRM": "تأكيد",
     "NO_COURSES_SELECTED": "لم يتم اختيار مقررات.",
-    "SUCCESS": "تم تسجيل المقررات بنجاح!"
+    "SUCCESS": "تم تسجيل المقررات بنجاح!",
+    "TOAST_TITLE": "تم التسجيل",
+    "TOAST_MSG": "تم تسجيل مقرر {{course}} بنجاح",
+    "NO_COURSES": "لا توجد مقررات متاحة للتسجيل حالياً",
+    "UNREGISTER_BTN": "إلغاء التسجيل",
+    "UNREGISTER_TOAST_TITLE": "تم الإلغاء",
+    "UNREGISTER_TOAST_MSG": "تم إلغاء تسجيل مقرر {{course}}"
   },
   "GRADES": {
     "TITLE": "الدرجات",
