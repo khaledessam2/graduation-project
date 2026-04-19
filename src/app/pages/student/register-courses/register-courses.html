@@ -240,7 +240,12 @@
                     <span class="text-sm font-medium text-slate-700 truncate">{{ prereq }}</span>
                   </div>
 
-                  @if (findCourseByPrereq(prereq); as prereqCourse) {
+                  @if (!selectedCourse()!.isLocked) {
+                    <span class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                      <ion-icon name="checkmark-circle-outline"></ion-icon>
+                      {{ 'REGISTER.PREREQ_PASSED' | translate }}
+                    </span>
+                  } @else if (findCourseByPrereq(prereq); as prereqCourse) {
                     <div class="flex items-center gap-2 shrink-0">
                       @if (prereqCourse.prerequisites.length > 0) {
                         <button
