@@ -9,6 +9,22 @@
   }
 }
 
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #075392E0;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #054f87;
+}
+
 /* Arabic RTL font */
 html[lang="ar"],
 html[dir="rtl"] {

@@ -54,10 +54,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loading.set(true);
     this.errorMsg.set('');
 
-    this.auth.login(this.nationalId, this.password).subscribe((result) => {
+    const role = this.role.toLowerCase() as 'student' | 'admin';
+    this.auth.login(this.nationalId, this.password, role).subscribe((result) => {
       this.loading.set(false);
       if (result.success) {
-        this.router.navigate(['/dashboard']);
+        const dest = this.auth.currentUser()?.role === 'admin' ? '/admin/dashboard' : '/dashboard';
+        this.router.navigate([dest]);
       } else {
         this.errorMsg.set(result.message);
       }

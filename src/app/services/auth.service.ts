@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, map, catchError, of } from 'rxjs';
-import { Student } from '../models/models';
+import { Student } from '../models/student/student.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -29,32 +29,35 @@ export class AuthService {
     return localStorage.getItem(this.UID_KEY);
   }
 
-  login(university_id: string, password: string): Observable<{ success: boolean; message: string }> {
+  login(universityId: string, password: string, role: string): Observable<{ success: boolean; message: string }> {
     return this.http
-      .post<any>(`${this.apiUrl}/api/login`, { university_id, password })
+      .post<any>(`${this.apiUrl}/api/login`, { universityId, password , role })
       .pipe(
         map((res) => {
-          localStorage.setItem(this.UID_KEY, university_id);
+          localStorage.setItem(this.UID_KEY, universityId);
 
-          if (res.token) {
-            localStorage.setItem(this.TOKEN_KEY, res.token);
+          // Spec: { success, data: { role, token } }
+          // Fallback: { token, student: { name, gpa, department } }
+          const data = res.data ?? res;
+          const token = data.token ?? res.token;
+          if (token) {
+            localStorage.setItem(this.TOKEN_KEY, token);
           }
 
-          // Login returns only: { student: { name, gpa, department }, token, message }
-          // Remaining fields are filled later by profile/dashboard services
-          const s = res.student ?? {};
+          const resolvedRole = ((data.role ?? role) as string).toLowerCase() as 'student' | 'admin';
+          const s = data.student ?? res.student ?? {};
           const user: Student = {
             id: 0,
             name: s.name ?? '',
             department: s.department ?? '',
             gpa: s.gpa ?? 0,
-            studentId: university_id,
-            nationalId: university_id,
+            studentId: universityId,
+            nationalId: universityId,
             email: '',
             yearOfStudy: '',
             passedHours: 0,
             availableHours: 0,
-            role: 'student',
+            role: resolvedRole,
           };
 
           localStorage.setItem(this.STORAGE_KEY, JSON.stringify(user));

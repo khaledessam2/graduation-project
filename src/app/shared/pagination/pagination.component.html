@@ -1,0 +1,36 @@
+@if (totalPages() > 1) {
+  <div class="flex flex-col items-center gap-2 px-4 py-3 border-t border-slate-100">
+    <p class="text-xs text-slate-500">
+      {{ 'PAGINATION.SHOWING' | translate: { from: from(), to: to(), total: total() } }}
+    </p>
+    <div class="flex items-center gap-1">
+
+      <button
+        class="flex items-center gap-1 px-3 h-8 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        [disabled]="currentPage() === 1"
+        (click)="prev()"
+      >‹ {{ 'PAGINATION.PREV' | translate }}</button>
+
+      @for (p of pages(); track $index) {
+        @if (p === null) {
+          <span class="w-8 h-8 flex items-center justify-center text-slate-400 text-sm select-none">…</span>
+        } @else {
+          <button
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-sm transition-colors"
+            [class]="p === currentPage()
+              ? 'bg-[#075392E0] text-white font-semibold'
+              : 'text-slate-600 hover:bg-slate-100'"
+            (click)="goTo(p)"
+          >{{ p }}</button>
+        }
+      }
+
+      <button
+        class="flex items-center gap-1 px-3 h-8 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        [disabled]="currentPage() === totalPages()"
+        (click)="next()"
+      >{{ 'PAGINATION.NEXT' | translate }} ›</button>
+
+    </div>
+  </div>
+}

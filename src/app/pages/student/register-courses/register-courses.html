@@ -1,0 +1,292 @@
+<div class="p-4 sm:p-6 space-y-6">
+
+  <!-- Page header -->
+  <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <h2 class="text-lg font-bold text-slate-800">{{ 'REGISTER.TITLE' | translate }}</h2>
+    <p class="text-slate-500 text-sm mt-1">{{ 'REGISTER.SUBTITLE' | translate }}</p>
+  </div>
+
+  <!-- Courses Table -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-100 bg-[#075392E0]">
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.COURSE_CODE' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.COURSE_NAME' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.CREDIT_HOURS' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.LEVEL' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.PROFESSOR' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.CAPACITY' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.PREREQUISITES' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.STATUS' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.REQUIREMENTS' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.ACTION' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          @for (course of paginatedCourses(); track course.id) {
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-4 py-3 font-mono text-xs font-semibold text-slate-500 whitespace-nowrap">{{ course.code }}</td>
+              <td class="px-4 py-3 font-medium text-slate-700 whitespace-nowrap">{{ course.name }}</td>
+              <td class="px-4 py-3 text-slate-600 text-center">{{ course.creditHours }}</td>
+              <td class="px-4 py-3 text-slate-600 text-center">{{ course.level }}</td>
+              <td class="px-4 py-3 text-slate-600 whitespace-nowrap">{{ course.professor }}</td>
+              <td class="px-4 py-3 text-slate-600 text-center">{{ course.capacity }}</td>
+              <td class="px-4 py-3">
+                @if (course.prerequisites.length > 0) {
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 whitespace-nowrap">
+                    <ion-icon name="alert-circle-outline"></ion-icon>
+                    {{ 'REGISTER.PREREQ_YES' | translate }} ({{ course.prerequisites.length }})
+                  </span>
+                } @else if (course.isLocked && course.lockReason) {
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                    <ion-icon name="lock-closed-outline" class="shrink-0"></ion-icon>
+                    <span class="max-w-[160px] truncate">{{ course.lockReason }}</span>
+                  </span>
+                } @else {
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 whitespace-nowrap">
+                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    {{ 'REGISTER.PREREQ_NO' | translate }}
+                  </span>
+                }
+              </td>
+              <td class="px-4 py-3 whitespace-nowrap">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                  [class]="getStatusClasses(course.status)"
+                >
+                  {{ course.status }}
+                </span>
+              </td>
+              <td class="px-4 py-3 whitespace-nowrap">
+                <button
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                  (click)="openPrereqModal(course)"
+                >
+                  {{ 'REGISTER.VIEW_REQUIREMENTS' | translate }}
+                </button>
+              </td>
+              <td class="px-4 py-3 whitespace-nowrap">
+                @if (isRegistered(course.id)) {
+                  <button
+                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+                    (click)="register(course)"
+                  >
+                    {{ 'REGISTER.UNREGISTER_BTN' | translate }}
+                  </button>
+                } @else {
+                  <button
+                    class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors bg-[#075392E0]"
+                    [disabled]="course.status !== 'Available' || course.isLocked"
+                    (click)="register(course)"
+                  >
+                    {{ 'REGISTER.REGISTER_BTN' | translate }}
+                  </button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="10" class="px-4 py-16 text-center">
+                <div class="flex flex-col items-center gap-3 text-slate-400">
+                  <ion-icon name="book-outline" class="text-5xl"></ion-icon>
+                  <p class="text-sm font-medium">{{ 'REGISTER.NO_COURSES' | translate }}</p>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-pagination
+      [total]="courses().length"
+      [pageSize]="pageSize"
+      [currentPage]="currentPage()"
+      (pageChange)="currentPage.set($event)"
+    />
+  </div>
+
+  <!-- Summary + Confirm -->
+  @if (courses().length > 0) {
+  <div class="bg-white mb-0 rounded-2xl p-6 shadow-sm border border-slate-100 text-center space-y-4">
+    <h3 class="text-lg font-semibold text-[#075392E0]">{{ 'REGISTER.SUMMARY_TITLE' | translate }}</h3>
+
+    <div class="flex justify-start flex-wrap">
+      <div class="flex justify-between w-full items-center">
+        <p class="text-2x text-slate-500 mt-0.5">{{ 'REGISTER.REGISTERED_COURSES_LABEL' | translate }}</p>
+        <p class="text-2xl font-bold text-slate-800">{{ pendingCount() }}</p>
+      </div>
+      <div class="flex justify-between w-full items-center">
+        <p class="text-2x text-slate-500 mt-0.5">{{ 'REGISTER.TOTAL_CREDIT_HOURS' | translate }}</p>
+        <p class="text-2xl font-bold" style="color: var(--color-primary)">
+          {{ pendingHoursTotal() }}<span class="text-slate-400 text-lg font-normal">/{{ availableHours() }}</span>
+        </p>
+      </div>
+    </div>
+
+    @if (confirmMsg()) {
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
+        [class]="confirmSuccess() ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'"
+      >
+        <ion-icon [name]="confirmSuccess() ? 'checkmark-circle-outline' : 'alert-circle-outline'" class="text-base"></ion-icon>
+        {{ confirmMsg() }}
+      </div>
+    }
+
+    <button
+      class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl text-white text-sm font-semibold transition-all w-full bg-[#075392E0] disabled:opacity-40 disabled:cursor-not-allowed hover:enabled:opacity-90"
+      [disabled]="pendingCount() === 0"
+      (click)="confirm()"
+    >
+      <ion-icon name="checkmark-circle-outline" class="text-lg"></ion-icon>
+      {{ 'REGISTER.CONFIRM' | translate }}
+    </button>
+  </div>
+  }
+
+</div>
+
+<!-- Prerequisites Modal -->
+@if (selectedCourse()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+    (click)="closePrereqModal()"
+  >
+    <div
+      class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90vh]"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Modal header -->
+      <div class="flex items-start justify-between gap-3 p-5 border-b border-slate-100">
+        <div class="flex items-start gap-2">
+          @if (hasHistory()) {
+            <button
+              class="text-slate-400 hover:text-slate-700 transition-colors shrink-0 mt-0.5"
+              (click)="goBack()"
+            >
+              <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
+            </button>
+          }
+          <div>
+            <p class="text-xs font-mono font-semibold text-slate-400">{{ selectedCourse()!.code }}</p>
+            <h3 class="text-base font-bold text-slate-800 mt-0.5">{{ selectedCourse()!.name }}</h3>
+          </div>
+        </div>
+        <button
+          class="text-slate-400 hover:text-slate-600 transition-colors shrink-0 mt-0.5"
+          (click)="closePrereqModal()"
+        >
+          <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+        </button>
+      </div>
+
+      <!-- Scrollable body -->
+      <div class="overflow-y-auto p-5 space-y-5">
+
+        <!-- Course info pills -->
+        <div class="flex flex-wrap gap-2">
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+            <ion-icon name="school-outline"></ion-icon>
+            {{ selectedCourse()!.creditHours }} {{ 'REGISTER.CREDIT_HOURS' | translate }}
+          </span>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+            <ion-icon name="layers-outline"></ion-icon>
+            {{ 'REGISTER.LEVEL' | translate }} {{ selectedCourse()!.level }}
+          </span>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+            <ion-icon name="people-outline"></ion-icon>
+            {{ selectedCourse()!.capacity }} {{ 'REGISTER.CAPACITY' | translate }}
+          </span>
+          <span
+            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold"
+            [class]="getStatusClasses(selectedCourse()!.status)"
+          >
+            {{ selectedCourse()!.status }}
+          </span>
+        </div>
+
+        <!-- Lock reason -->
+        @if (selectedCourse()!.isLocked && selectedCourse()!.lockReason) {
+          <div class="flex items-start gap-2 text-sm text-orange-700 bg-orange-50 rounded-xl px-3 py-2.5">
+            <ion-icon name="lock-closed-outline" class="text-base shrink-0 mt-0.5"></ion-icon>
+            <span>{{ selectedCourse()!.lockReason }}</span>
+          </div>
+        }
+
+        <!-- Prerequisites list -->
+        <div class="space-y-2">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+            {{ 'REGISTER.PREREQUISITES' | translate }}
+          </p>
+
+          @if (selectedCourse()!.prerequisites.length === 0) {
+            <div class="flex items-center gap-2 text-sm text-green-700 bg-green-50 rounded-xl px-3 py-2.5">
+              <ion-icon name="checkmark-circle-outline" class="text-base shrink-0"></ion-icon>
+              <span>
+                {{ 'REGISTER.NO_PREREQ_SHORT' | translate }}
+                @if (!selectedCourse()!.isLocked) {
+                  — {{ 'REGISTER.NO_PREREQ_CAN_REGISTER' | translate }}
+                }
+              </span>
+            </div>
+          } @else {
+            <div class="divide-y divide-slate-100 border border-slate-100 rounded-xl overflow-hidden">
+              @for (prereq of selectedCourse()!.prerequisites; track prereq) {
+                <div class="flex items-center justify-between gap-3 px-4 py-3 bg-white hover:bg-slate-50 transition-colors">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <ion-icon name="book-outline" class="text-slate-400 shrink-0"></ion-icon>
+                    <span class="text-sm font-medium text-slate-700 truncate">{{ prereq }}</span>
+                  </div>
+
+                  @if (findCourseByPrereq(prereq); as prereqCourse) {
+                    <div class="flex items-center gap-2 shrink-0">
+                      @if (prereqCourse.prerequisites.length > 0) {
+                        <button
+                          class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors inline-flex items-center gap-1"
+                          (click)="openPrereqModal(prereqCourse)"
+                        >
+                          <ion-icon name="git-branch-outline"></ion-icon>
+                          {{ 'REGISTER.VIEW_REQUIREMENTS' | translate }}
+                        </button>
+                      }
+                      @if (isRegistered(prereqCourse.id)) {
+                        <button
+                          class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+                          (click)="register(prereqCourse)"
+                        >
+                          {{ 'REGISTER.UNREGISTER_BTN' | translate }}
+                        </button>
+                      } @else {
+                        <button
+                          class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#075392E0] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                          [disabled]="prereqCourse.status !== 'Available' || prereqCourse.isLocked"
+                          (click)="register(prereqCourse)"
+                        >
+                          {{ 'REGISTER.REGISTER_BTN' | translate }}
+                        </button>
+                      }
+                    </div>
+                  } @else if (isPrereqPassed(prereq)) {
+                    <span class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                      <ion-icon name="checkmark-circle-outline"></ion-icon>
+                      {{ 'REGISTER.PREREQ_PASSED' | translate }}
+                    </span>
+                  } @else {
+                    <span class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500">
+                      <ion-icon name="remove-circle-outline"></ion-icon>
+                      {{ 'REGISTER.PREREQ_UNAVAILABLE' | translate }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+}

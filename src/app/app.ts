@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LanguageService } from './services/language.service';
-import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
+import { LoadingBarComponent } from './shared/loading-bar/loading-bar.component';
 
 @Component({
   selector: 'app-root',
