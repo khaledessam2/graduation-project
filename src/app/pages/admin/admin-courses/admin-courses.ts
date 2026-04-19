@@ -1,10 +1,12 @@
 import { Component, signal, computed, OnInit, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { AdminCourseFormComponent } from './admin-course-form/admin-course-form.component';
 import { AdminCoursesService } from '../../../services/admin/admin-courses.service';
 import { AdminCourseDto } from '../../../models/admin/admin-course.model';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 const EMPTY_FORM = (): Omit<AdminCourseDto, 'enrolled'> => ({
   code: '', name: '', creditHours: 3, level: 1, professor: '',
@@ -13,22 +15,23 @@ const EMPTY_FORM = (): Omit<AdminCourseDto, 'enrolled'> => ({
 
 @Component({
   selector: 'app-admin-courses',
-  imports: [FormsModule, TranslateModule, PaginationComponent, AdminCourseFormComponent],
+  imports: [FormsModule, TranslateModule, PaginationComponent, AdminCourseFormComponent, ConfirmDialog],
   templateUrl: './admin-courses.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AdminCoursesComponent implements OnInit {
-  private coursesService = inject(AdminCoursesService);
+  private coursesService      = inject(AdminCoursesService);
+  private confirmationService = inject(ConfirmationService);
+  private translate           = inject(TranslateService);
 
-  searchQuery= signal('');
-  showModal= signal(false);
-  editMode = signal(false);
+  searchQuery = signal('');
+  showModal   = signal(false);
+  editMode    = signal(false);
   editOriginalCode = signal('');
-  formError = signal('');
-  form = signal(EMPTY_FORM());
-  confirmDeleteCode = signal('');
-  loading = signal(false);
-  saving  = signal(false);
+  formError   = signal('');
+  form        = signal(EMPTY_FORM());
+  loading     = signal(false);
+  saving      = signal(false);
 
   statusOptions: { value: AdminCourseDto['status']; labelKey: string }[] = [
     { value: 'Available', labelKey: 'ADMIN.AVAILABLE' },
@@ -157,16 +160,17 @@ export class AdminCoursesComponent implements OnInit {
     }
   }
 
-  askDelete(code: string): void  { this.confirmDeleteCode.set(code); }
-  cancelDelete(): void           { this.confirmDeleteCode.set(''); }
-
-  executeDelete(code: string): void {
-    this.coursesService.deleteCourse(code).subscribe({
-      next: () => {
-        this.courses.update((list) => list.filter((c) => c.code !== code));
-        this.confirmDeleteCode.set('');
+  confirmDelete(code: string): void {
+    this.confirmationService.confirm({
+      message: this.translate.instant('ADMIN.DELETE_CONFIRM_COURSE_MSG'),
+      header:  this.translate.instant('ADMIN.DELETE_CONFIRM_HEADER'),
+      icon:    'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.coursesService.deleteCourse(code).subscribe({
+          next: () => this.courses.update((list) => list.filter((c) => c.code !== code)),
+        });
       },
-      error: () => this.confirmDeleteCode.set(''),
     });
   }
 }

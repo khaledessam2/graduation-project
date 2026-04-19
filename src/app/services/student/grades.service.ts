@@ -35,7 +35,7 @@ export class GradesService {
               semester: g.semester ?? '',
               grade: g.grade ?? g.numeric_grade ?? 0,
               recognition: g.recognition ?? g.letter_grade ?? '',
-            }))
+            })),
           );
           this.loading.set(false);
         }),
@@ -43,7 +43,7 @@ export class GradesService {
           this.error.set(err.error?.message ?? 'Failed to load grades');
           this.loading.set(false);
           return of(null);
-        })
+        }),
       );
   }
 }

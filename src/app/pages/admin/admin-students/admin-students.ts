@@ -5,38 +5,62 @@ import { DecimalPipe } from '@angular/common';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { AdminStudentFormComponent } from './admin-student-form/admin-student-form.component';
 import { AdminStudentsService } from '../../../services/admin/admin-students.service';
-import { AdminStudentDto } from '../../../models/admin/admin-student.model';
+import { AdminStudentDto, AcademicRecord } from '../../../models/admin/admin-student.model';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 
 const EMPTY_FORM = (): AdminStudentDto => ({
-  studentId: '', name: '', email: '', department: '', year: 'الأولى', gpa: 0, passedHours: 0, registeredCourses: [],
+  studentId: '',
+  name: '',
+  email: '',
+  department: '',
+  year: '',
+  gpa: 0,
+  passedHours: 0,
+  registeredCourses: [],
+  academicHistory: [],
+  password: '',
 });
 
 @Component({
   selector: 'app-admin-students',
-  imports: [FormsModule, TranslateModule, DecimalPipe, PaginationComponent, AdminStudentFormComponent, ConfirmDialog],
+  imports: [
+    FormsModule,
+    TranslateModule,
+    DecimalPipe,
+    PaginationComponent,
+    AdminStudentFormComponent,
+    ConfirmDialog,
+  ],
   templateUrl: './admin-students.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AdminStudentsComponent implements OnInit {
-  private studentsService     = inject(AdminStudentsService);
+  private studentsService = inject(AdminStudentsService);
   private confirmationService = inject(ConfirmationService);
-  private translate           = inject(TranslateService);
+  private translate = inject(TranslateService);
 
-  searchQuery    = signal('');
-  showModal      = signal(false);
-  editMode       = signal(false);
+  searchQuery = signal('');
+  showModal = signal(false);
+  editMode = signal(false);
   editOriginalId = signal('');
-  formError      = signal('');
-  form           = signal(EMPTY_FORM());
-  loading        = signal(false);
-  saving         = signal(false);
+  formError = signal('');
+  form = signal(EMPTY_FORM());
+  loading = signal(false);
+  saving = signal(false);
 
-  coursesPopup = signal<{ name: string; courses: string[] } | null>(null);
+  coursesPopup = signal<{
+    name: string;
+    courses: string[];
+    academicHistory: AcademicRecord[];
+  } | null>(null);
 
   openCoursesPopup(student: AdminStudentDto): void {
-    this.coursesPopup.set({ name: student.name, courses: student.registeredCourses });
+    this.coursesPopup.set({
+      name: student.name,
+      courses: student.registeredCourses,
+      academicHistory: student.academicHistory,
+    });
   }
 
   closeCoursesPopup(): void {
@@ -44,7 +68,7 @@ export class AdminStudentsComponent implements OnInit {
   }
 
   yearOptions = [
-    { value: 'الأولى',  labelKey: 'ADMIN.YEAR_1' },
+    { value: 'الأولى', labelKey: 'ADMIN.YEAR_1' },
     { value: 'الثانية', labelKey: 'ADMIN.YEAR_2' },
     { value: 'الثالثة', labelKey: 'ADMIN.YEAR_3' },
     { value: 'الرابعة', labelKey: 'ADMIN.YEAR_4' },
@@ -56,7 +80,7 @@ export class AdminStudentsComponent implements OnInit {
     const q = this.searchQuery().trim().toLowerCase();
     if (!q) return this.students();
     return this.students().filter(
-      (s) => s.name.toLowerCase().includes(q) || s.studentId.toLowerCase().includes(q)
+      (s) => s.name.toLowerCase().includes(q) || s.studentId.toLowerCase().includes(q),
     );
   });
 
@@ -82,7 +106,10 @@ export class AdminStudentsComponent implements OnInit {
     });
   }
 
-  onSearch(value: string): void { this.searchQuery.set(value); this.currentPage.set(1); }
+  onSearch(value: string): void {
+    this.searchQuery.set(value);
+    this.currentPage.set(1);
+  }
 
   onFormChange(ev: { key: string; value: any }): void {
     this.updateField(ev.key as any, ev.value);
@@ -119,16 +146,19 @@ export class AdminStudentsComponent implements OnInit {
       return;
     }
     const duplicate = this.students().some(
-      (s) => s.studentId === f.studentId.trim() && s.studentId !== this.editOriginalId()
+      (s) => s.studentId === f.studentId.trim() && s.studentId !== this.editOriginalId(),
     );
-    if (duplicate) { this.formError.set('ADMIN.STUDENT_ID_EXISTS'); return; }
+    if (duplicate) {
+      this.formError.set('ADMIN.STUDENT_ID_EXISTS');
+      return;
+    }
 
     const payload: AdminStudentDto = {
       ...f,
-      studentId:   f.studentId.trim(),
-      name:        f.name.trim(),
-      department:  f.department.trim(),
-      gpa:         Number(f.gpa),
+      studentId: f.studentId.trim(),
+      name: f.name.trim(),
+      department: f.department.trim(),
+      gpa: Number(f.gpa),
       passedHours: Number(f.passedHours),
     };
 
@@ -139,7 +169,7 @@ export class AdminStudentsComponent implements OnInit {
       this.studentsService.updateStudent(this.editOriginalId(), payload).subscribe({
         next: () => {
           this.students.update((list) =>
-            list.map((s) => s.studentId === this.editOriginalId() ? payload : s)
+            list.map((s) => (s.studentId === this.editOriginalId() ? payload : s)),
           );
           this.saving.set(false);
           this.showModal.set(false);
@@ -167,8 +197,8 @@ export class AdminStudentsComponent implements OnInit {
   confirmDelete(id: string): void {
     this.confirmationService.confirm({
       message: this.translate.instant('ADMIN.DELETE_CONFIRM_MSG'),
-      header:  this.translate.instant('ADMIN.DELETE_CONFIRM_HEADER'),
-      icon:    'pi pi-exclamation-triangle',
+      header: this.translate.instant('ADMIN.DELETE_CONFIRM_HEADER'),
+      icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
         this.studentsService.deleteStudent(id).subscribe({

@@ -6,7 +6,7 @@ export class LayoutService {
   sidebarCollapsed = signal(false);
 
   toggle(): void {
-    this.sidebarOpen.update(v => !v);
+    this.sidebarOpen.update((v) => !v);
   }
 
   close(): void {
@@ -14,6 +14,6 @@ export class LayoutService {
   }
 
   toggleCollapse(): void {
-    this.sidebarCollapsed.update(v => !v);
+    this.sidebarCollapsed.update((v) => !v);
   }
 }

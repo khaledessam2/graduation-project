@@ -39,10 +39,10 @@ export class TimetableService {
             raw.map((e) => ({
               courseCode: e.courseCode ?? e.course_code ?? '',
               courseName: e.courseName ?? e.course_name ?? '',
-              day:        e.day        ?? '',
-              time:       e.time       ?? '',
-              location:   e.location   ?? '',
-            }))
+              day: e.day ?? '',
+              time: e.time ?? '',
+              location: e.location ?? '',
+            })),
           );
           this.loading.set(false);
         }),
@@ -50,7 +50,7 @@ export class TimetableService {
           this.error.set(err.error?.message ?? 'Failed to load timetable');
           this.loading.set(false);
           return of(null);
-        })
+        }),
       );
   }
 }

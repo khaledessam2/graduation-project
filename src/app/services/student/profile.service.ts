@@ -48,7 +48,7 @@ export class ProfileService {
         this.error.set(err.error?.message ?? 'Failed to load profile');
         this.loading.set(false);
         return of(undefined as void);
-      })
+      }),
     );
   }
 }

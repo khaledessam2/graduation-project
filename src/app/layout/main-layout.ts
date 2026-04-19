@@ -16,7 +16,7 @@ import { Toast } from 'primeng/toast';
         (click)="layout.close()"
       ></div>
     }
-    <div class="flex min-h-screen bg-slate-100 items-start">
+    <div class="flex min-h-screen bg-slate-100">
       <app-sidebar />
       <div class="flex-1 flex flex-col overflow-hidden">
         <app-navbar />

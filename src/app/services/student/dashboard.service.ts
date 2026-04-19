@@ -36,12 +36,12 @@ export class DashboardService {
               name: c.course_name ?? c.courseName ?? c.name ?? '',
               hours: c.hours ?? c.creditHours ?? c.credits ?? 3,
               professor: c.professor ?? '',
-            }))
+            })),
           );
           this.auth.updateStats(
             data.gpa ?? 0,
             data.passedHours ?? data.passed_hours ?? 0,
-            data.availableHours ?? data.available_hours ?? 18
+            data.availableHours ?? data.available_hours ?? 18,
           );
           this.loading.set(false);
         }),
@@ -49,7 +49,7 @@ export class DashboardService {
           this.error.set(err.error?.message ?? 'Failed to load dashboard');
           this.loading.set(false);
           return of(null);
-        })
+        }),
       );
   }
 
@@ -61,14 +61,12 @@ export class DashboardService {
       })
       .pipe(
         tap(() => {
-          this.registeredCourses.set(
-            this.registeredCourses().filter((c) => c.code !== courseCode)
-          );
+          this.registeredCourses.set(this.registeredCourses().filter((c) => c.code !== courseCode));
         }),
         catchError((err) => {
           this.error.set(err.error?.message ?? 'Failed to unregister course');
           return of(null);
-        })
+        }),
       );
   }
 

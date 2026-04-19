@@ -28,7 +28,9 @@ export class RegistrationService {
         tap((res) => {
           // Spec: { success, data: [{ ...Course, isLocked, lockReason }] }
           const data = res.data ?? res;
-          const raw: any[] = Array.isArray(data) ? data : (data.courses ?? data.available_courses ?? []);
+          const raw: any[] = Array.isArray(data)
+            ? data
+            : (data.courses ?? data.available_courses ?? []);
           this.availableCourses.set(
             raw.map((c, i) => ({
               id: i + 1,
@@ -40,13 +42,16 @@ export class RegistrationService {
               prerequisites: Array.isArray(c.prerequisites)
                 ? c.prerequisites
                 : c.prerequisites
-                  ? String(c.prerequisites).split(',').map((s: string) => s.trim()).filter(Boolean)
+                  ? String(c.prerequisites)
+                      .split(',')
+                      .map((s: string) => s.trim())
+                      .filter(Boolean)
                   : [],
               status: c.status ?? 'Available',
               professor: c.professor ?? '',
               isLocked: c.isLocked ?? false,
               lockReason: c.lockReason ?? null,
-            }))
+            })),
           );
           this.loading.set(false);
         }),
@@ -54,7 +59,7 @@ export class RegistrationService {
           this.error.set(err.error?.message ?? 'Failed to load courses');
           this.loading.set(false);
           return of(null);
-        })
+        }),
       );
   }
 
@@ -87,7 +92,7 @@ export class RegistrationService {
           const msg = err.error?.message ?? 'Registration failed';
           this.error.set(msg);
           return of({ success: false, message: msg });
-        })
+        }),
       );
   }
 

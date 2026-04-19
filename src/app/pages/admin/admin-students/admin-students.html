@@ -80,20 +80,23 @@
               </td>
               <td class="px-4 py-3 text-center text-slate-600">{{ student.passedHours }}</td>
               <td class="px-4 py-3 text-center">
-                <button
-                  class="inline-flex items-center justify-center min-w-7 h-7 px-2 rounded-full text-xs font-semibold transition-colors"
+                <span class="inline-flex items-center justify-center min-w-7 h-7 px-2 rounded-full text-xs font-semibold"
                   [class.bg-[#EEF5FF]]="student.registeredCourses.length > 0"
                   [class.text-[#075392E0]]="student.registeredCourses.length > 0"
-                  [class.hover:bg-[#d6e9f8]]="student.registeredCourses.length > 0"
                   [class.bg-slate-100]="student.registeredCourses.length === 0"
                   [class.text-slate-400]="student.registeredCourses.length === 0"
-                  (click)="openCoursesPopup(student)"
-                >
-                  {{ student.registeredCourses.length }}
-                </button>
+                >{{ student.registeredCourses.length }}</span>
               </td>
               <td class="px-4 py-3 text-center">
                 <div class="flex items-center justify-center gap-1.5">
+                  <button
+                    class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    [disabled]="student.registeredCourses.length === 0"
+                    (click)="openCoursesPopup(student)"
+                  >
+                    <ion-icon name="eye-outline" class="text-sm"></ion-icon>
+                    {{ 'ADMIN.VIEW' | translate }}
+                  </button>
                   <button
                     class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-[#075392E0] bg-[#F4F9FF] hover:bg-blue-100 border border-blue-200 transition-colors"
                     (click)="openEditModal(student)"
@@ -152,38 +155,92 @@
 
 <!-- Registered Courses Popup -->
 @if (coursesPopup()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" (click)="closeCoursesPopup()">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm" (click)="$event.stopPropagation()">
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" (click)="closeCoursesPopup()">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[85vh]" (click)="$event.stopPropagation()">
 
       <!-- Header -->
-      <div class="flex items-center justify-between px-5 py-4 bg-[#075392E0] rounded-t-2xl">
+      <div class="flex items-center justify-between px-5 py-4 bg-[#075392E0] rounded-t-2xl shrink-0">
         <div class="flex items-center gap-2 text-white">
-          <ion-icon name="library-outline" class="text-lg"></ion-icon>
-          <span class="font-semibold text-sm">{{ coursesPopup()!.name }}</span>
+          <ion-icon name="person-circle-outline" class="text-2xl"></ion-icon>
+          <div>
+            <p class="font-semibold text-sm leading-tight">{{ coursesPopup()!.name }}</p>
+            <p class="text-white/60 text-xs">{{ 'ADMIN.STUDENT_DETAILS' | translate }}</p>
+          </div>
         </div>
-        <button class="text-white opacity-75 hover:opacity-100 transition-opacity" (click)="closeCoursesPopup()">
-          <ion-icon name="close-outline" class="text-xl"></ion-icon>
+        <button class="text-white/70 hover:text-white transition-colors" (click)="closeCoursesPopup()">
+          <ion-icon name="close-outline" class="text-2xl"></ion-icon>
         </button>
       </div>
 
       <!-- Body -->
-      <div class="px-5 py-4">
-        <p class="text-xs text-slate-400 mb-3">{{ 'ADMIN.REGISTERED_COURSES' | translate }}</p>
+      <div class="overflow-y-auto px-5 py-4 space-y-5">
 
-        @if (coursesPopup()!.courses.length === 0) {
-          <div class="flex flex-col items-center gap-2 py-6 text-slate-400">
-            <ion-icon name="folder-open-outline" class="text-3xl"></ion-icon>
-            <p class="text-sm">{{ 'ADMIN.NO_REGISTERED_COURSES' | translate }}</p>
+        <!-- Registered Courses -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <ion-icon name="checkmark-circle-outline" class="text-[#075392E0]"></ion-icon>
+            <p class="text-xs font-semibold text-slate-600 uppercase tracking-wide">{{ 'ADMIN.REGISTERED_COURSES' | translate }}</p>
+            <span class="ml-auto px-2 py-0.5 rounded-full text-xs font-bold bg-[#EEF5FF] text-[#075392E0]">{{ coursesPopup()!.courses.length }}</span>
           </div>
-        } @else {
-          <div class="flex flex-wrap gap-2">
-            @for (code of coursesPopup()!.courses; track code) {
-              <span class="inline-block px-3 py-1.5 rounded-lg text-sm font-semibold bg-[#EEF5FF] text-[#075392E0] border border-[#c3dcf7]">
-                {{ code }}
-              </span>
-            }
+          @if (coursesPopup()!.courses.length === 0) {
+            <div class="flex flex-col items-center gap-2 py-6 text-slate-400 bg-slate-50 rounded-xl">
+              <ion-icon name="folder-open-outline" class="text-3xl"></ion-icon>
+              <p class="text-sm">{{ 'ADMIN.NO_REGISTERED_COURSES' | translate }}</p>
+            </div>
+          } @else {
+            <div class="grid grid-cols-3 gap-2">
+              @for (code of coursesPopup()!.courses; track code) {
+                <div class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#EEF5FF] border border-[#c3dcf7]">
+                  <ion-icon name="book-outline" class="text-[#075392E0] text-sm shrink-0"></ion-icon>
+                  <span class="text-xs font-semibold text-[#075392E0] truncate">{{ code }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Divider -->
+        @if (coursesPopup()!.academicHistory.length > 0) {
+          <hr class="border-slate-100">
+        }
+
+        <!-- Academic History -->
+        @if (coursesPopup()!.academicHistory.length > 0) {
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <ion-icon name="trophy-outline" class="text-[#075392E0]"></ion-icon>
+              <p class="text-xs font-semibold text-slate-600 uppercase tracking-wide">{{ 'ADMIN.ACADEMIC_HISTORY' | translate }}</p>
+              <span class="ml-auto px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600">{{ coursesPopup()!.academicHistory.length }}</span>
+            </div>
+            <div class="divide-y divide-slate-100 border border-slate-100 rounded-xl overflow-hidden">
+              @for (record of coursesPopup()!.academicHistory; track record.courseCode + record.semester) {
+                <div class="flex items-center justify-between gap-3 px-4 py-3 bg-white hover:bg-slate-50 transition-colors">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="shrink-0 w-8 h-8 rounded-lg bg-[#EEF5FF] flex items-center justify-center">
+                      <ion-icon name="school-outline" class="text-[#075392E0] text-sm"></ion-icon>
+                    </span>
+                    <div class="min-w-0">
+                      <p class="text-xs font-bold text-slate-700">{{ record.courseCode }}</p>
+                      <p class="text-xs text-slate-400">{{ record.semester }}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 shrink-0">
+                    <span class="text-sm font-bold text-slate-700">{{ record.grade }}</span>
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold"
+                      [class.bg-green-100]="record.recognition.includes('A') || record.recognition.includes('B')"
+                      [class.text-green-700]="record.recognition.includes('A') || record.recognition.includes('B')"
+                      [class.bg-amber-100]="record.recognition.includes('C') && !record.recognition.includes('A') && !record.recognition.includes('B')"
+                      [class.text-amber-700]="record.recognition.includes('C') && !record.recognition.includes('A') && !record.recognition.includes('B')"
+                      [class.bg-red-100]="record.recognition.includes('D') || record.recognition.includes('F')"
+                      [class.text-red-700]="record.recognition.includes('D') || record.recognition.includes('F')"
+                    >{{ record.recognition }}</span>
+                  </div>
+                </div>
+              }
+            </div>
           </div>
         }
+
       </div>
 
     </div>

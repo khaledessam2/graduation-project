@@ -14,7 +14,10 @@ export class AuthService {
 
   currentUser = signal<Student | null>(this.loadUser());
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
   private loadUser(): Student | null {
     try {
@@ -29,48 +32,50 @@ export class AuthService {
     return localStorage.getItem(this.UID_KEY);
   }
 
-  login(universityId: string, password: string, role: string): Observable<{ success: boolean; message: string }> {
-    return this.http
-      .post<any>(`${this.apiUrl}/api/login`, { universityId, password , role })
-      .pipe(
-        map((res) => {
-          localStorage.setItem(this.UID_KEY, universityId);
+  login(
+    universityId: string,
+    password: string,
+    role: string,
+  ): Observable<{ success: boolean; message: string }> {
+    return this.http.post<any>(`${this.apiUrl}/api/login`, { universityId, password, role }).pipe(
+      map((res) => {
+        localStorage.setItem(this.UID_KEY, universityId);
 
-          // Spec: { success, data: { role, token } }
-          // Fallback: { token, student: { name, gpa, department } }
-          const data = res.data ?? res;
-          const token = data.token ?? res.token;
-          if (token) {
-            localStorage.setItem(this.TOKEN_KEY, token);
-          }
+        // Spec: { success, data: { role, token } }
+        // Fallback: { token, student: { name, gpa, department } }
+        const data = res.data ?? res;
+        const token = data.token ?? res.token;
+        if (token) {
+          localStorage.setItem(this.TOKEN_KEY, token);
+        }
 
-          const resolvedRole = ((data.role ?? role) as string).toLowerCase() as 'student' | 'admin';
-          const s = data.student ?? res.student ?? {};
-          const user: Student = {
-            id: 0,
-            name: s.name ?? '',
-            department: s.department ?? '',
-            gpa: s.gpa ?? 0,
-            studentId: universityId,
-            nationalId: universityId,
-            email: '',
-            yearOfStudy: '',
-            passedHours: 0,
-            availableHours: 0,
-            role: resolvedRole,
-          };
+        const resolvedRole = ((data.role ?? role) as string).toLowerCase() as 'student' | 'admin';
+        const s = data.student ?? res.student ?? {};
+        const user: Student = {
+          id: 0,
+          name: s.name ?? '',
+          department: s.department ?? '',
+          gpa: s.gpa ?? 0,
+          studentId: universityId,
+          nationalId: universityId,
+          email: '',
+          yearOfStudy: '',
+          passedHours: 0,
+          availableHours: 0,
+          role: resolvedRole,
+        };
 
-          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(user));
-          this.currentUser.set(user);
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(user));
+        this.currentUser.set(user);
 
-          return { success: true, message: res.message ?? 'Login successful.' };
-        }),
-        catchError((err) => {
-          const message =
-            err.error?.message ?? err.error?.detail ?? 'Login failed. Please check your credentials.';
-          return of({ success: false, message });
-        })
-      );
+        return { success: true, message: res.message ?? 'Login successful.' };
+      }),
+      catchError((err) => {
+        const message =
+          err.error?.message ?? err.error?.detail ?? 'Login failed. Please check your credentials.';
+        return of({ success: false, message });
+      }),
+    );
   }
 
   /** Called after dashboard loads to sync GPA / hours into the user signal */

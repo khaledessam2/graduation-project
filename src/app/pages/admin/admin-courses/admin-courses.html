@@ -125,35 +125,22 @@
                 }
               </td>
               <td class="px-4 py-3 text-center">
-                @if (confirmDeleteCode() === course.code) {
-                  <div class="flex items-center justify-center gap-1.5">
-                    <button
-                      class="px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition-colors"
-                      (click)="executeDelete(course.code)"
-                    >{{ 'ADMIN.CONFIRM_DELETE' | translate }}</button>
-                    <button
-                      class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-600 border border-slate-200 hover:bg-slate-100 transition-colors"
-                      (click)="cancelDelete()"
-                    >{{ 'ADMIN.CANCEL' | translate }}</button>
-                  </div>
-                } @else {
-                  <div class="flex items-center justify-center gap-1.5">
-                    <button
-                      class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-[#075392E0] bg-[#F4F9FF] hover:bg-blue-100 border border-blue-200 transition-colors"
-                      (click)="openEditModal(course)"
-                    >
-                      <i class="pi pi-pencil text-xs"></i>
-                      {{ 'ADMIN.EDIT' | translate }}
-                    </button>
-                    <button
-                      class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors"
-                      (click)="askDelete(course.code)"
-                    >
-                      <i class="pi pi-trash text-xs"></i>
-                      {{ 'ADMIN.DELETE' | translate }}
-                    </button>
-                  </div>
-                }
+                <div class="flex items-center justify-center gap-1.5">
+                  <button
+                    class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-[#075392E0] bg-[#F4F9FF] hover:bg-blue-100 border border-blue-200 transition-colors"
+                    (click)="openEditModal(course)"
+                  >
+                    <i class="pi pi-pencil text-xs"></i>
+                    {{ 'ADMIN.EDIT' | translate }}
+                  </button>
+                  <button
+                    class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors"
+                    (click)="confirmDelete(course.code)"
+                  >
+                    <i class="pi pi-trash text-xs"></i>
+                    {{ 'ADMIN.DELETE' | translate }}
+                  </button>
+                </div>
               </td>
             </tr>
           }
@@ -179,6 +166,8 @@
   </div>
 
 </div>
+
+<p-confirmdialog />
 
 @if (showModal()) {
   <app-admin-course-form

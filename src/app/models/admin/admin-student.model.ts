@@ -1,3 +1,10 @@
+export interface AcademicRecord {
+  courseCode: string;
+  semester: string;
+  grade: number;
+  recognition: string;
+}
+
 export interface AdminStudentDto {
   studentId: string;
   name: string;
@@ -7,4 +14,6 @@ export interface AdminStudentDto {
   gpa: number;
   passedHours: number;
   registeredCourses: string[];
+  academicHistory: AcademicRecord[];
+  password: string;
 }

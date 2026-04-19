@@ -1,5 +1,4 @@
-<header class=" border-b  px-4 py-3 flex items-center gap-3 shadow-sm shrink-0">
-
+<header class="border-b px-4 py-3 flex items-center gap-3 shadow-sm shrink-0">
   <!-- Hamburger (mobile only) -->
   <button
     class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors shrink-0"
@@ -24,12 +23,16 @@
   <!-- Brand -->
   <div class="flex-1 min-w-0">
     <h2 class="text-base font-bold truncate" style="color: var(--color-primary)">UniSmart</h2>
-    <p class="text-xs text-slate-500 truncate hidden sm:block">{{ 'NAVBAR.SUBTITLE' | translate }}</p>
+    <p class="text-xs text-slate-500 truncate hidden sm:block">
+      {{ 'NAVBAR.SUBTITLE' | translate }}
+    </p>
   </div>
 
   <!-- Search (dashboard only) -->
   @if (isDashboard) {
-    <div class="hidden md:flex items-center w-[40%] gap-2 border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus-within:border-accent transition-colors">
+    <div
+      class="hidden md:flex items-center w-[40%] gap-2 border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus-within:border-accent transition-colors"
+    >
       <ion-icon name="search-outline" class="text-slate-400 shrink-0"></ion-icon>
       <input
         type="text"
@@ -64,5 +67,4 @@
       </span>
     }
   </button> -->
-
 </header>

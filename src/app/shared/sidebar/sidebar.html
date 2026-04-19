@@ -1,5 +1,5 @@
 <aside
-  class="fixed inset-y-0 start-0 z-30 bg-white border-e border-slate-200 flex-col py-6 overflow-y-auto lg:flex lg:sticky lg:top-0 lg:h-screen lg:z-auto transition-all duration-300"
+  class="fixed inset-y-0 start-0 z-30 bg-white border-e border-slate-200 flex-col py-6 overflow-y-auto lg:flex lg:sticky lg:top-0 lg:self-stretch lg:h-auto lg:min-h-screen lg:z-auto transition-all duration-300"
   [class.hidden]="!layout.sidebarOpen()"
   [class.flex]="layout.sidebarOpen()"
   [class.w-64]="!layout.sidebarCollapsed()"
@@ -8,7 +8,12 @@
   <!-- Brand -->
   <div class="px-3 mb-8 flex flex-col items-center gap-3 overflow-hidden">
     @if (!layout.sidebarCollapsed()) {
-      <img src="assets/images/logo.png" alt="UniSmart" class="w-32 mb-5 object-contain" onerror="this.style.display='none'" />
+      <img
+        src="assets/images/logo.png"
+        alt="UniSmart"
+        class="w-32 mb-5 object-contain"
+        onerror="this.style.display = 'none'"
+      />
       <div class="flex items-center gap-2 text-[#075392E0]">
         <ion-icon name="book-outline" class="text-xl"></ion-icon>
         <span class="text-lg font-bold">UniSmart</span>
@@ -40,7 +45,11 @@
   </nav>
 
   <!-- Logout -->
-  <div class="px-2 mt-4 pt-4 border-t border-slate-100" [class.flex]="layout.sidebarCollapsed()" [class.justify-center]="layout.sidebarCollapsed()">
+  <div
+    class="px-2 mt-4 pt-4 border-t border-slate-100"
+    [class.flex]="layout.sidebarCollapsed()"
+    [class.justify-center]="layout.sidebarCollapsed()"
+  >
     <button
       class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 text-sm font-medium hover:bg-red-50 hover:text-red-600 transition-all"
       [class.justify-center]="layout.sidebarCollapsed()"
