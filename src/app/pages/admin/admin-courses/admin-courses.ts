@@ -68,7 +68,12 @@ export class AdminCoursesComponent implements OnInit {
     this.loading.set(true);
     this.coursesService.getCourses().subscribe({
       next: (list) => {
-        this.courses.set(list);
+        this.courses.set(list.map(c => ({
+          ...c,
+          prerequisites: c.prerequisites
+            ? c.prerequisites.replace(/[{}]/g, '')
+            : c.prerequisites,
+        })));
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
