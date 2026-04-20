@@ -41,7 +41,7 @@
           <ion-icon name="time-outline" class="text-xl"></ion-icon>
           </span>
         </div>
-        <p class="text-2xl font-bold text-slate-800">{{ 'DASHBOARD.HRS_VALUE' | translate:{ value: student()?.availableHours } }}</p>
+        <p class="text-2xl font-bold text-slate-800">{{ 'DASHBOARD.HRS_VALUE' | translate:{ value: remainingHours() } }}</p>
       </div>
 
       <!-- Passed Hours -->
@@ -100,7 +100,7 @@
       <div class="space-y-3 flex-1">
         <div class="flex items-center justify-between text-sm">
           <span class="text-slate-500">{{ 'DASHBOARD.AVAILABLE' | translate }}</span>
-          <span class="font-semibold text-slate-700">{{ 'DASHBOARD.HRS_VALUE' | translate:{ value: student()?.availableHours } }}</span>
+          <span class="font-semibold text-slate-700">{{ 'DASHBOARD.HRS_VALUE' | translate:{ value: remainingHours() } }}</span>
         </div>
         <div class="flex items-center justify-between text-sm">
           <span class="text-slate-500">{{ 'DASHBOARD.USED' | translate }}</span>

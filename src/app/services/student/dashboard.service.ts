@@ -38,10 +38,11 @@ export class DashboardService {
               professor: c.professor ?? '',
             })),
           );
+          const student = data.student ?? data;
           this.auth.updateStats(
-            data.gpa ?? 0,
-            data.passedHours ?? data.passed_hours ?? 0,
-            data.availableHours ?? data.available_hours ?? 18,
+            student.gpa ?? data.gpa ?? 0,
+            student.passedHours ?? data.passedHours ?? data.passed_hours ?? 0,
+            student.remainingHours ?? data.remainingHours ?? data.available_hours ?? 18,
           );
           this.loading.set(false);
         }),
@@ -61,7 +62,18 @@ export class DashboardService {
       })
       .pipe(
         tap(() => {
+          const deleted = this.registeredCourses().find((c) => c.code === courseCode);
           this.registeredCourses.set(this.registeredCourses().filter((c) => c.code !== courseCode));
+          if (deleted) {
+            const user = this.auth.currentUser();
+            if (user) {
+              this.auth.updateStats(
+                user.gpa,
+                user.passedHours,
+                (user.availableHours ?? 0) + deleted.hours,
+              );
+            }
+          }
         }),
         catchError((err) => {
           this.error.set(err.error?.message ?? 'Failed to unregister course');

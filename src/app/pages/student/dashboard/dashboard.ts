@@ -53,9 +53,11 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.registeredCourses().reduce((sum, c) => sum + c.hours, 0)
   );
 
+  remainingHours = computed(() => this.student()?.availableHours ?? 0);
+
   usedPercent = computed(() => {
-    const avail = this.student()?.availableHours ?? 1;
-    return Math.min(100, Math.round((this.usedHours() / avail) * 100));
+    const total = this.remainingHours() + this.usedHours() || 1;
+    return Math.min(100, Math.round((this.usedHours() / total) * 100));
   });
 
   deleteCourse(courseCode: string): void {
