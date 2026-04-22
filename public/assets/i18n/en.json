@@ -8,7 +8,8 @@
     "LOGGING_IN": "Logging in...",
     "FILL_ALL_FIELDS": "Please fill in all fields.",
     "SUPPORT_TEXT": "If you have a problem,",
-    "CONTACT_LINK": "Contact Student Affairs."
+    "CONTACT_LINK": "Contact Student Affairs.",
+    "EMAIL" : "Email"
   },
   "DASHBOARD": {
     "GREETING": "Hello, {{name}}",

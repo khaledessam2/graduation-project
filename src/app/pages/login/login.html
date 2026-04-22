@@ -27,14 +27,20 @@
       <!-- National ID -->
       <div class="flex items-center border-[1.5px] border-slate-300 rounded-xl bg-white focus-within:border-slate-500 transition-colors">
         <input
-          type="text"
+          [type]="role === 'Admin' ? 'email' : 'text'"
           [(ngModel)]="nationalId"
           name="nationalId"
-          [placeholder]="'LOGIN.NATIONAL_ID' | translate"
+          [placeholder]="role === 'Admin'
+            ? ('LOGIN.EMAIL' | translate)
+            : ('LOGIN.NATIONAL_ID' | translate)"
           class="flex-1 px-4 py-3 bg-transparent text-sm text-slate-700 outline-none"
           autocomplete="off"
         />
-        <ion-icon name="card-outline" class="text-slate-400 me-4 text-lg shrink-0"></ion-icon>
+
+        <ion-icon
+          [name]="role === 'Admin' ? 'mail-outline' : 'card-outline'"
+          class="text-slate-400 me-4 text-lg shrink-0">
+        </ion-icon>
       </div>
 
       <!-- Password -->

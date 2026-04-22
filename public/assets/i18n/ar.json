@@ -8,7 +8,8 @@
     "LOGGING_IN": "جاري الدخول...",
     "FILL_ALL_FIELDS": "يرجى ملء جميع الحقول.",
     "SUPPORT_TEXT": "إذا واجهت مشكلة،",
-    "CONTACT_LINK": "تواصل مع شؤون الطلاب."
+    "CONTACT_LINK": "تواصل مع شؤون الطلاب.",
+    "EMAIL" : "البريد الإلكتروني"
   },
   "DASHBOARD": {
     "GREETING": "مرحباً، {{name}}",
