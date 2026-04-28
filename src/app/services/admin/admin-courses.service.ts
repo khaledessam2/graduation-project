@@ -28,6 +28,8 @@ export class AdminCoursesService {
           name: c.name ?? c.course_name ?? '',
           creditHours: c.credits ?? c.creditHours ?? c.credit_hours ?? 3,
           level: c.level ?? 0,
+          term: c.term ?? 1,
+          department: c.department ?? '',
           professor: c.professor ?? '',
           status: c.status ?? 'Available',
           prerequisites: Array.isArray(c.prerequisites)

@@ -8,6 +8,73 @@
 
   <!-- Courses Table -->
   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+
+    <!-- Filters -->
+    <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/50 space-y-3">
+      <div class="flex flex-wrap gap-4">
+        <div class="flex flex-col gap-1.5 flex-1 min-w-[150px]">
+          <label class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+            <ion-icon name="layers-outline" class="text-[#075392E0]"></ion-icon>
+            {{ 'REGISTER.LEVEL' | translate }}
+          </label>
+          <p-select
+            [options]="availableLevels()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="filterLevel()"
+            (ngModelChange)="filterLevel.set($event); currentPage.set(1)"
+            [placeholder]="'REGISTER.FILTER_ALL_LEVELS' | translate"
+            [showClear]="true"
+            class="w-full"
+          />
+        </div>
+        <div class="flex flex-col gap-1.5 flex-1 min-w-[150px]">
+          <label class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+            <ion-icon name="calendar-outline" class="text-[#075392E0]"></ion-icon>
+            {{ 'REGISTER.Term' | translate }}
+          </label>
+          <p-select
+            [options]="availableTerms()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="filterTerm()"
+            (ngModelChange)="filterTerm.set($event); currentPage.set(1)"
+            [placeholder]="'REGISTER.FILTER_ALL_TERMS' | translate"
+            [showClear]="true"
+            class="w-full"
+          />
+        </div>
+        <div class="flex flex-col gap-1.5 flex-1 min-w-[150px]">
+          <label class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+            <ion-icon name="business-outline" class="text-[#075392E0]"></ion-icon>
+            {{ 'REGISTER.DEPARTMENT' | translate }}
+          </label>
+          <p-select
+            [options]="availableDepartments()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="filterDepartment()"
+            (ngModelChange)="filterDepartment.set($event); currentPage.set(1)"
+            [placeholder]="'REGISTER.FILTER_ALL_DEPTS' | translate"
+            [showClear]="true"
+            class="w-full"
+          />
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-xs text-slate-400">{{ filteredCourses().length }} {{ 'REGISTER.FILTER_RESULTS' | translate }}</span>
+        @if (hasActiveFilter()) {
+          <button
+            class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 transition-colors"
+            (click)="clearFilters()"
+          >
+            <ion-icon name="close-circle-outline" class="text-sm"></ion-icon>
+            {{ 'REGISTER.FILTER_RESET' | translate }}
+          </button>
+        }
+      </div>
+    </div>
+
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
@@ -16,8 +83,9 @@
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.COURSE_NAME' | translate }}</th>
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.CREDIT_HOURS' | translate }}</th>
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.LEVEL' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.Term' | translate }}</th>
+            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.DEPARTMENT' | translate }}</th>
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.PROFESSOR' | translate }}</th>
-            <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.CAPACITY' | translate }}</th>
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.PREREQUISITES' | translate }}</th>
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.STATUS' | translate }}</th>
             <th class="text-start px-4 py-3 text-xs font-semibold text-white/80 uppercase tracking-wide whitespace-nowrap">{{ 'REGISTER.REQUIREMENTS' | translate }}</th>
@@ -31,8 +99,9 @@
               <td class="px-4 py-3 font-medium text-slate-700 whitespace-nowrap">{{ course.name }}</td>
               <td class="px-4 py-3 text-slate-600 text-center">{{ course.creditHours }}</td>
               <td class="px-4 py-3 text-slate-600 text-center">{{ course.level }}</td>
+              <td class="px-4 py-3 text-slate-600 text-center">{{ course.term }}</td>
+              <td class="px-4 py-3 text-slate-600 whitespace-nowrap">{{ course.department }}</td>
               <td class="px-4 py-3 text-slate-600 whitespace-nowrap">{{ course.professor }}</td>
-              <td class="px-4 py-3 text-slate-600 text-center">{{ course.capacity }}</td>
               <td class="px-4 py-3">
                 @if (course.prerequisites.length > 0) {
                   <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 whitespace-nowrap">
@@ -88,7 +157,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="10" class="px-4 py-16 text-center">
+              <td colspan="11" class="px-4 py-16 text-center">
                 <div class="flex flex-col items-center gap-3 text-slate-400">
                   <ion-icon name="book-outline" class="text-5xl"></ion-icon>
                   <p class="text-sm font-medium">{{ 'REGISTER.NO_COURSES' | translate }}</p>
@@ -100,7 +169,7 @@
       </table>
     </div>
     <app-pagination
-      [total]="courses().length"
+      [total]="filteredCourses().length"
       [pageSize]="pageSize"
       [currentPage]="currentPage()"
       (pageChange)="currentPage.set($event)"

@@ -20,13 +20,6 @@
     <!-- Body -->
     <div class="overflow-y-auto px-6 py-5 space-y-6">
 
-      @if (formError()) {
-        <div class="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
-          <ion-icon name="alert-circle-outline" class="text-base shrink-0"></ion-icon>
-          {{ formError() | translate }}
-        </div>
-      }
-
       <!-- Basic Info -->
       <div class="space-y-3">
         <div class="flex items-center gap-2">
@@ -45,15 +38,17 @@
             </div>
             <div class="flex flex-col gap-1.5">
               <label class="text-xs font-semibold text-slate-500">{{ 'ADMIN.YEAR' | translate }}</label>
-              <select
-                class="w-full border border-white bg-white rounded-xl px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-[#075392E0] focus:ring-2 focus:ring-[#07539215] transition shadow-sm"
-                [ngModel]="form().year" (ngModelChange)="update('year', $event)"
+              <p-select
+                [options]="yearOptions()"
+                [ngModel]="form().year"
+                (ngModelChange)="update('year', $event)"
+                optionValue="value"
+                [placeholder]="'ADMIN.YEAR' | translate"
+                class="w-full"
               >
-                <option value="">— اختر —</option>
-                @for (opt of yearOptions(); track opt.value) {
-                  <option [value]="opt.value">{{ opt.labelKey | translate }}</option>
-                }
-              </select>
+                <ng-template #selectedItem let-item>{{ item.labelKey | translate }}</ng-template>
+                <ng-template #item let-item>{{ item.labelKey | translate }}</ng-template>
+              </p-select>
             </div>
           </div>
 
@@ -133,35 +128,17 @@
           }
         </div>
 
-        <div class="flex gap-2">
-          <input type="text"
-            class="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-[#075392E0] focus:ring-2 focus:ring-[#07539215] transition"
-            placeholder="CS211"
-            [ngModel]="newCourse()" (ngModelChange)="newCourse.set($event)"
-            (keydown)="onCourseKeydown($event)" />
-          <button type="button"
-            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#075392E0] hover:bg-[#054f87] transition-colors"
-            (click)="addCourse()">
-            <ion-icon name="add-outline" class="text-base"></ion-icon>
-            {{ 'ADMIN.ADD' | translate }}
-          </button>
-        </div>
-
-        @if (form().registeredCourses.length > 0) {
-          <div class="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-xl">
-            @for (code of form().registeredCourses; track code) {
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-[#075392E0] border border-[#c3dcf7] shadow-sm">
-                <ion-icon name="book-outline" class="text-xs"></ion-icon>
-                {{ code }}
-                <button type="button" class="text-slate-300 hover:text-red-500 transition-colors ms-0.5" (click)="removeCourse(code)">
-                  <ion-icon name="close-outline"></ion-icon>
-                </button>
-              </span>
-            }
-          </div>
-        } @else {
-          <p class="text-xs text-slate-400 text-center py-2">{{ 'ADMIN.NO_REGISTERED_COURSES' | translate }}</p>
-        }
+        <p-multiSelect
+          [options]="allCourseOptions()"
+          [ngModel]="selectedCourseCodes()"
+          (ngModelChange)="onRegisteredCoursesChange($event)"
+          optionLabel="label"
+          optionValue="value"
+          [placeholder]="'ADMIN.SELECT_COURSES' | translate"
+          [filter]="true"
+          display="chip"
+          class="w-full"
+        />
       </div>
 
       <!-- Academic History -->
@@ -180,17 +157,24 @@
           <div class="grid grid-cols-2 gap-3">
             <div class="flex flex-col gap-1.5">
               <label class="text-xs font-semibold text-slate-500">{{ 'ADMIN.COURSE_CODE' | translate }}</label>
-              <input type="text"
-                class="w-full border border-white bg-white rounded-xl px-3 py-2 text-sm text-slate-700 outline-none focus:border-[#075392E0] focus:ring-2 focus:ring-[#07539215] transition shadow-sm"
-                placeholder="CS111"
-                [ngModel]="newRecord().courseCode" (ngModelChange)="newRecord.update(r => ({...r, courseCode: $event}))" />
+              <p-select
+                [options]="courseSelectOptions()"
+                optionLabel="label"
+                optionValue="value"
+                [ngModel]="newRecord().courseCode"
+                (ngModelChange)="onCourseSelect($event)"
+                [placeholder]="'ADMIN.SELECT_COURSE' | translate"
+                [showClear]="true"
+                class="w-full"
+              />
             </div>
             <div class="flex flex-col gap-1.5">
               <label class="text-xs font-semibold text-slate-500">{{ 'ADMIN.SEMESTER' | translate }}</label>
               <input type="text"
-                class="w-full border border-white bg-white rounded-xl px-3 py-2 text-sm text-slate-700 outline-none focus:border-[#075392E0] focus:ring-2 focus:ring-[#07539215] transition shadow-sm"
-                placeholder="First 2024"
-                [ngModel]="newRecord().semester" (ngModelChange)="newRecord.update(r => ({...r, semester: $event}))" />
+                class="w-full border border-white bg-white rounded-xl px-3 py-2 text-sm text-slate-700 outline-none transition shadow-sm disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+                [placeholder]="'ADMIN.SEMESTER_PLACEHOLDER' | translate"
+                [ngModel]="newRecord().semester"
+                disabled />
             </div>
             <div class="flex flex-col gap-1.5">
               <label class="text-xs font-semibold text-slate-500">{{ 'ADMIN.GRADE' | translate }}</label>

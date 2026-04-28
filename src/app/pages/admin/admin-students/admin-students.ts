@@ -5,9 +5,12 @@ import { DecimalPipe } from '@angular/common';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { AdminStudentFormComponent } from './admin-student-form/admin-student-form.component';
 import { AdminStudentsService } from '../../../services/admin/admin-students.service';
+import { AdminCoursesService } from '../../../services/admin/admin-courses.service';
 import { AdminStudentDto, AcademicRecord } from '../../../models/admin/admin-student.model';
-import { ConfirmationService } from 'primeng/api';
+import { AdminCourseDto } from '../../../models/admin/admin-course.model';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Select } from 'primeng/select';
 
 const EMPTY_FORM = (): AdminStudentDto => ({
   studentId: '',
@@ -31,34 +34,40 @@ const EMPTY_FORM = (): AdminStudentDto => ({
     PaginationComponent,
     AdminStudentFormComponent,
     ConfirmDialog,
+    Select,
   ],
   templateUrl: './admin-students.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AdminStudentsComponent implements OnInit {
   private studentsService = inject(AdminStudentsService);
+  private coursesService = inject(AdminCoursesService);
   private confirmationService = inject(ConfirmationService);
   private translate = inject(TranslateService);
+  private toast = inject(MessageService);
 
   searchQuery = signal('');
+  filterDepartment = signal<string | null>(null);
+  filterYear = signal<string | null>(null);
+  filterGpa = signal<string | null>(null);
   showModal = signal(false);
   editMode = signal(false);
   editOriginalId = signal('');
-  formError = signal('');
+
   form = signal(EMPTY_FORM());
   loading = signal(false);
   saving = signal(false);
 
   coursesPopup = signal<{
     name: string;
-    courses: string[];
+    courses: { code: string; name: string }[];
     academicHistory: AcademicRecord[];
   } | null>(null);
 
   openCoursesPopup(student: AdminStudentDto): void {
     this.coursesPopup.set({
       name: student.name,
-      courses: student.registeredCourses,
+      courses: student.registeredCourses.map(c => ({ code: c.code, name: c.name })),
       academicHistory: student.academicHistory,
     });
   }
@@ -68,21 +77,52 @@ export class AdminStudentsComponent implements OnInit {
   }
 
   yearOptions = [
-    { value: 'الأولى', labelKey: 'ADMIN.YEAR_1' },
-    { value: 'الثانية', labelKey: 'ADMIN.YEAR_2' },
-    { value: 'الثالثة', labelKey: 'ADMIN.YEAR_3' },
-    { value: 'الرابعة', labelKey: 'ADMIN.YEAR_4' },
+    { value: 'الأولى', labelKey: 'ADMIN.YEAR_1', label: 'الأولى' },
+    { value: 'الثانية', labelKey: 'ADMIN.YEAR_2', label: 'الثانية' },
+    { value: 'الثالثة', labelKey: 'ADMIN.YEAR_3', label: 'الثالثة' },
+    { value: 'الرابعة', labelKey: 'ADMIN.YEAR_4', label: 'الرابعة' },
   ];
 
   students = signal<AdminStudentDto[]>([]);
+  availableCourses = signal<AdminCourseDto[]>([]);
+
+  availableDepartments = computed(() =>
+    [...new Set(this.students().map(s => s.department).filter(Boolean))].sort()
+      .map(v => ({ label: v, value: v }))
+  );
+
+  gpaOptions = [
+    { label: '≥ 3.5', value: 'high' },
+    { label: '3.0 – 3.49', value: 'mid' },
+    { label: '< 3.0', value: 'low' },
+  ];
+
+  hasActiveFilter = computed(() =>
+    this.filterDepartment() !== null || this.filterYear() !== null || this.filterGpa() !== null
+  );
 
   filteredStudents = computed(() => {
     const q = this.searchQuery().trim().toLowerCase();
-    if (!q) return this.students();
-    return this.students().filter(
-      (s) => s.name.toLowerCase().includes(q) || s.studentId.toLowerCase().includes(q),
-    );
+    const dept = this.filterDepartment();
+    const year = this.filterYear();
+    const gpa = this.filterGpa();
+    return this.students().filter(s => {
+      if (q && !s.name.toLowerCase().includes(q) && !s.studentId.toLowerCase().includes(q)) return false;
+      if (dept && s.department !== dept) return false;
+      if (year && s.year !== year) return false;
+      if (gpa === 'high' && s.gpa < 3.5) return false;
+      if (gpa === 'mid' && (s.gpa < 3.0 || s.gpa >= 3.5)) return false;
+      if (gpa === 'low' && s.gpa >= 3.0) return false;
+      return true;
+    });
   });
+
+  clearFilters(): void {
+    this.filterDepartment.set(null);
+    this.filterYear.set(null);
+    this.filterGpa.set(null);
+    this.currentPage.set(1);
+  }
 
   readonly pageSize = 10;
   currentPage = signal(1);
@@ -93,6 +133,13 @@ export class AdminStudentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStudents();
+    this.loadCourses();
+  }
+
+  private loadCourses(): void {
+    this.coursesService.getCourses().subscribe({
+      next: (list) => this.availableCourses.set(list),
+    });
   }
 
   private loadStudents(): void {
@@ -117,7 +164,6 @@ export class AdminStudentsComponent implements OnInit {
 
   openAddModal(): void {
     this.form.set(EMPTY_FORM());
-    this.formError.set('');
     this.editMode.set(false);
     this.editOriginalId.set('');
     this.showModal.set(true);
@@ -125,7 +171,6 @@ export class AdminStudentsComponent implements OnInit {
 
   openEditModal(student: AdminStudentDto): void {
     this.form.set({ ...student });
-    this.formError.set('');
     this.editMode.set(true);
     this.editOriginalId.set(student.studentId);
     this.showModal.set(true);
@@ -142,14 +187,14 @@ export class AdminStudentsComponent implements OnInit {
   submitForm(): void {
     const f = this.form();
     if (!f.studentId.trim() || !f.name.trim() || !f.department.trim()) {
-      this.formError.set('ADMIN.FILL_REQUIRED');
+      this.toast.add({ severity: 'warn', summary: this.translate.instant('ADMIN.VALIDATION_ERROR'), detail: this.translate.instant('ADMIN.FILL_REQUIRED'), life: 4000 });
       return;
     }
     const duplicate = this.students().some(
       (s) => s.studentId === f.studentId.trim() && s.studentId !== this.editOriginalId(),
     );
     if (duplicate) {
-      this.formError.set('ADMIN.STUDENT_ID_EXISTS');
+      this.toast.add({ severity: 'warn', summary: this.translate.instant('ADMIN.VALIDATION_ERROR'), detail: this.translate.instant('ADMIN.STUDENT_ID_EXISTS'), life: 4000 });
       return;
     }
 
@@ -162,8 +207,11 @@ export class AdminStudentsComponent implements OnInit {
       passedHours: Number(f.passedHours),
     };
 
+    if (this.editMode() && !f.password?.trim()) {
+      delete (payload as any).password;
+    }
+
     this.saving.set(true);
-    this.formError.set('');
 
     if (this.editMode()) {
       this.studentsService.updateStudent(this.editOriginalId(), payload).subscribe({
@@ -174,8 +222,9 @@ export class AdminStudentsComponent implements OnInit {
           this.saving.set(false);
           this.showModal.set(false);
         },
-        error: () => {
-          this.formError.set('ADMIN.ERROR_SAVE');
+        error: (err) => {
+          const msg = err?.error?.message ?? this.translate.instant('ADMIN.ERROR_SAVE');
+          this.toast.add({ severity: 'error', summary: this.translate.instant('ADMIN.ERROR'), detail: msg, life: 5000 });
           this.saving.set(false);
         },
       });
@@ -186,8 +235,9 @@ export class AdminStudentsComponent implements OnInit {
           this.saving.set(false);
           this.showModal.set(false);
         },
-        error: () => {
-          this.formError.set('ADMIN.ERROR_SAVE');
+        error: (err) => {
+          const msg = err?.error?.message ?? this.translate.instant('ADMIN.ERROR_SAVE');
+          this.toast.add({ severity: 'error', summary: this.translate.instant('ADMIN.ERROR'), detail: msg, life: 5000 });
           this.saving.set(false);
         },
       });

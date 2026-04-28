@@ -4,6 +4,8 @@ export interface Course {
   name: string;
   creditHours: number;
   level: number;
+  term: number;
+  department: string;
   capacity: number;
   prerequisites: string[];
   status: 'Available' | 'Full' | 'Closed';

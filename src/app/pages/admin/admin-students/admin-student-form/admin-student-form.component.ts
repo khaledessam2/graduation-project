@@ -1,48 +1,68 @@
-import { Component, input, output, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, computed, input, output, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { AdminStudentDto, AcademicRecord } from '../../../../models/admin/admin-student.model';
+import { Select } from 'primeng/select';
+import { MultiSelect } from 'primeng/multiselect';
+import { AdminStudentDto, AcademicRecord, AdminRegisteredCourse } from '../../../../models/admin/admin-student.model';
+import { AdminCourseDto } from '../../../../models/admin/admin-course.model';
 
 @Component({
   selector: 'app-admin-student-form',
   standalone: true,
-  imports: [FormsModule, TranslateModule],
+  imports: [FormsModule, TranslateModule, Select, MultiSelect],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './admin-student-form.component.html',
 })
 export class AdminStudentFormComponent {
   form = input.required<AdminStudentDto>();
   editMode = input.required<boolean>();
-  formError = input<string>('');
   saving = input<boolean>(false);
-  yearOptions = input.required<{ value: string; labelKey: string }[]>();
+  yearOptions = input.required<{ value: string; labelKey: string; label: string }[]>();
+  availableCourses = input<AdminCourseDto[]>([]);
 
   fieldChange = output<{ key: string; value: any }>();
   save = output<void>();
   cancel = output<void>();
 
-  newCourse = signal('');
   newRecord = signal<AcademicRecord>({ courseCode: '', semester: '', grade: 0, recognition: '' });
   showPassword = signal(false);
+
+  allCourseOptions = computed(() =>
+    this.availableCourses().map(c => ({
+      label: `${c.code} — ${c.name}`,
+      value: c.code,
+    }))
+  );
+
+  selectedCourseCodes = computed(() => this.form().registeredCourses.map(c => c.code));
+
+  courseSelectOptions = computed(() =>
+    this.form().registeredCourses.map(c => ({
+      label: `${c.code} — ${c.name}`,
+      value: c.code,
+      term: c.term,
+    }))
+  );
 
   update(key: string, value: any): void {
     this.fieldChange.emit({ key, value });
   }
 
-  addCourse(): void {
-    const code = this.newCourse().trim().toUpperCase();
-    if (!code) return;
-    const current = this.form().registeredCourses;
-    if (current.includes(code)) return;
-    this.update('registeredCourses', [...current, code]);
-    this.newCourse.set('');
+  onRegisteredCoursesChange(codes: string[]): void {
+    const courseMap = new Map(this.availableCourses().map(c => [c.code, c]));
+    const newCourses: AdminRegisteredCourse[] = codes.map(code => {
+      const full = courseMap.get(code);
+      return full
+        ? { code: full.code, name: full.name, level: full.level, term: full.term, creditHours: full.creditHours, department: full.department }
+        : { code, name: code, level: 0, term: 0, creditHours: 0, department: '' };
+    });
+    this.update('registeredCourses', newCourses);
   }
 
-  removeCourse(code: string): void {
-    this.update(
-      'registeredCourses',
-      this.form().registeredCourses.filter((c) => c !== code),
-    );
+  onCourseSelect(code: string): void {
+    const course = this.form().registeredCourses.find(c => c.code === code);
+    const semester = course ? (course.term === 1 ? 'الأول' : 'الثاني') : '';
+    this.newRecord.update(r => ({ ...r, courseCode: code, semester }));
   }
 
   addRecord(): void {
@@ -62,10 +82,4 @@ export class AdminStudentFormComponent {
     );
   }
 
-  onCourseKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.addCourse();
-    }
-  }
 }

@@ -6,7 +6,7 @@
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
       <h2 class="text-2xl font-bold text-slate-800">
-        {{ 'DASHBOARD.GREETING' | translate:{ name: (student()?.name ?? '').split(' ')[0] } }}
+        {{ 'DASHBOARD.GREETING' | translate:{ name: student()?.name } }}
       </h2>
       <p class="text-slate-500 text-sm mt-1">{{ 'DASHBOARD.WELCOME_SUB' | translate }}</p>
     </div>
@@ -104,7 +104,7 @@
         </div>
         <div class="flex items-center justify-between text-sm">
           <span class="text-slate-500">{{ 'DASHBOARD.USED' | translate }}</span>
-          <span class="font-semibold text-slate-700">{{ usedHours() }}</span>
+          <span class="font-semibold text-slate-700">{{ 'DASHBOARD.HRS_VALUE' | translate:{ value: usedHours() } }}</span>
         </div>
         <p class="text-xs text-slate-400 pt-1">{{ 'DASHBOARD.DATA_BASED_ON_GPA' | translate }}</p>
       </div>
@@ -117,12 +117,6 @@
 
     <div class="flex items-center justify-between px-5 py-3.5 bg-[#075392E0]">
       <span class="text-white text-sm font-semibold">{{ 'DASHBOARD.REGISTERED_COURSES' | translate }}</span>
-      <button
-        class="text-white border border-white py-2 hover:decoration-0 px-5 rounded-lg text-xs font-medium transition-colors"
-        (click)="downloadPdf()"
-      >
-        {{ 'DASHBOARD.DOWNLOAD_PDF' | translate }}
-      </button>
     </div>
 
     <div class="overflow-x-auto">

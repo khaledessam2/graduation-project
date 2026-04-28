@@ -43,6 +43,7 @@ export class DashboardService {
             student.gpa ?? data.gpa ?? 0,
             student.passedHours ?? data.passedHours ?? data.passed_hours ?? 0,
             student.remainingHours ?? data.remainingHours ?? data.available_hours ?? 18,
+            student.name ?? data.name,
           );
           this.loading.set(false);
         }),

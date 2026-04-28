@@ -23,7 +23,7 @@
   }
 
   <!-- Stats cards -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
     <!-- Total Students -->
     <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
@@ -55,22 +55,7 @@
       }
     </div>
 
-    <!-- Active Registrations -->
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-sm text-slate-500">{{ 'ADMIN.ACTIVE_REGISTRATIONS' | translate }}</span>
-        <span class="bg-[#CDFFDE75] text-[#1BB44EC2] px-2 py-1">
-          <ion-icon name="checkmark-circle-outline" class="text-xl"></ion-icon>
-        </span>
-      </div>
-      @if (loading()) {
-        <div class="h-8 w-20 rounded-lg bg-slate-200 animate-pulse"></div>
-      } @else {
-        <p class="text-2xl font-bold text-slate-800">{{ stats().activeRegistrations | number }}</p>
-      }
-    </div>
-
-    <!-- Departments -->
+<!-- Departments -->
     <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
       <div class="flex items-center justify-between mb-4">
         <span class="text-sm text-slate-500">{{ 'ADMIN.DEPARTMENTS' | translate }}</span>
@@ -85,6 +70,18 @@
       }
     </div>
 
+  </div>
+
+  <!-- Search bar -->
+  <div class="bg-white rounded-2xl px-4 py-3 shadow-sm border border-slate-100 flex items-center gap-3">
+    <ion-icon name="search-outline" class="text-slate-400 text-lg shrink-0"></ion-icon>
+    <input
+      type="text"
+      class="flex-1 text-sm text-slate-700 bg-transparent outline-none placeholder:text-slate-400"
+      [placeholder]="'ADMIN.SEARCH_REGISTRATIONS' | translate"
+      [value]="searchQuery()"
+      (input)="searchQuery.set($any($event.target).value)"
+    />
   </div>
 
   <!-- Recent Registrations Table -->
@@ -106,7 +103,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
-          @for (reg of recentRegistrations(); track reg.studentId + reg.courseCode) {
+          @for (reg of filteredRegistrations(); track reg.studentId + reg.courseCode) {
             <tr class="hover:bg-slate-50 transition-colors">
               <td class="px-4 py-3 text-center text-sm font-semibold text-red-500">{{ reg.studentId }}</td>
               <td class="px-4 py-3 text-center text-slate-700">{{ reg.studentName }}</td>
@@ -127,6 +124,15 @@
                 } @else {
                   <span class="text-slate-400 text-xs">—</span>
                 }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="px-4 py-10 text-center">
+                <div class="flex flex-col items-center gap-2 text-slate-400">
+                  <ion-icon name="search-outline" class="text-3xl"></ion-icon>
+                  <p class="text-sm font-medium">{{ 'ADMIN.NO_REGISTRATIONS_FOUND' | translate }}</p>
+                </div>
               </td>
             </tr>
           }

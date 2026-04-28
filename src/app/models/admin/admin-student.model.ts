@@ -5,6 +5,15 @@ export interface AcademicRecord {
   recognition: string;
 }
 
+export interface AdminRegisteredCourse {
+  code: string;
+  name: string;
+  level: number;
+  term: number;
+  creditHours: number;
+  department: string;
+}
+
 export interface AdminStudentDto {
   studentId: string;
   name: string;
@@ -13,7 +22,7 @@ export interface AdminStudentDto {
   year: string;
   gpa: number;
   passedHours: number;
-  registeredCourses: string[];
+  registeredCourses: AdminRegisteredCourse[];
   academicHistory: AcademicRecord[];
   password: string;
 }

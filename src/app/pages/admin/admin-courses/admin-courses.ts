@@ -7,15 +7,19 @@ import { AdminCoursesService } from '../../../services/admin/admin-courses.servi
 import { AdminCourseDto } from '../../../models/admin/admin-course.model';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Select } from 'primeng/select';
+
+const LEVEL_LABELS: Record<number, string> = { 1: 'الأول', 2: 'الثاني', 3: 'الثالث', 4: 'الرابع' };
+const TERM_LABELS:  Record<number, string> = { 1: 'الأول', 2: 'الثاني' };
 
 const EMPTY_FORM = (): Omit<AdminCourseDto, 'enrolled'> => ({
-  code: '', name: '', creditHours: 3, level: 1, professor: '',
-  status: 'Available', prerequisites: '', capacity: 60,
+  code: '', name: '', creditHours: 3, level: 1, term: 1, department: '',
+  professor: '', status: 'Available', prerequisites: '', capacity: 60,
 });
 
 @Component({
   selector: 'app-admin-courses',
-  imports: [FormsModule, TranslateModule, PaginationComponent, AdminCourseFormComponent, ConfirmDialog],
+  imports: [FormsModule, TranslateModule, PaginationComponent, AdminCourseFormComponent, ConfirmDialog, Select],
   templateUrl: './admin-courses.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -24,29 +28,61 @@ export class AdminCoursesComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private translate           = inject(TranslateService);
 
-  searchQuery = signal('');
-  showModal   = signal(false);
-  editMode    = signal(false);
+  searchQuery      = signal('');
+  filterLevel      = signal<number | null>(null);
+  filterTerm       = signal<number | null>(null);
+  filterDepartment = signal<string | null>(null);
+
+  showModal        = signal(false);
+  editMode         = signal(false);
   editOriginalCode = signal('');
-  formError   = signal('');
-  form        = signal(EMPTY_FORM());
-  loading     = signal(false);
-  saving      = signal(false);
+  formError        = signal('');
+  form             = signal(EMPTY_FORM());
+  loading          = signal(false);
+  saving           = signal(false);
+
+  readonly levelLabels = LEVEL_LABELS;
+  readonly termLabels  = TERM_LABELS;
+
+  readonly levelOptions = [
+    { label: 'الأول',  value: 1 },
+    { label: 'الثاني', value: 2 },
+    { label: 'الثالث', value: 3 },
+    { label: 'الرابع', value: 4 },
+  ];
+  readonly termOptions = [
+    { label: 'الأول',  value: 1 },
+    { label: 'الثاني', value: 2 },
+  ];
 
   statusOptions: { value: AdminCourseDto['status']; labelKey: string }[] = [
     { value: 'Available', labelKey: 'ADMIN.AVAILABLE' },
-    { value: 'Full',      labelKey: 'ADMIN.FULL'      },
     { value: 'Closed',    labelKey: 'ADMIN.CLOSED'    },
   ];
 
   courses = signal<AdminCourseDto[]>([]);
 
+  departmentOptions = computed(() =>
+    [...new Set(this.courses().map((c) => c.department).filter(Boolean))].sort()
+      .map(v => ({ label: v, value: v }))
+  );
+
+  hasActiveFilters = computed(() =>
+    this.filterLevel() !== null || this.filterTerm() !== null || this.filterDepartment() !== null
+  );
+
   filteredCourses = computed(() => {
-    const q = this.searchQuery().trim().toLowerCase();
-    if (!q) return this.courses();
-    return this.courses().filter(
-      (c) => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
-    );
+    const q    = this.searchQuery().trim().toLowerCase();
+    const lvl  = this.filterLevel();
+    const term = this.filterTerm();
+    const dept = this.filterDepartment();
+    return this.courses().filter((c) => {
+      if (q && !c.name.toLowerCase().includes(q) && !c.code.toLowerCase().includes(q)) return false;
+      if (lvl  !== null && c.level      !== lvl)  return false;
+      if (term !== null && c.term       !== term)  return false;
+      if (dept != null && c.department !== dept)    return false;
+      return true;
+    });
   });
 
   readonly pageSize = 10;
@@ -57,7 +93,6 @@ export class AdminCoursesComponent implements OnInit {
   });
 
   availableCount = computed(() => this.courses().filter((c) => c.status === 'Available').length);
-  fullCount      = computed(() => this.courses().filter((c) => c.status === 'Full').length);
   closedCount    = computed(() => this.courses().filter((c) => c.status === 'Closed').length);
 
   ngOnInit(): void {
@@ -81,6 +116,15 @@ export class AdminCoursesComponent implements OnInit {
   }
 
   onSearch(value: string): void { this.searchQuery.set(value); this.currentPage.set(1); }
+
+  onFilterChange(): void { this.currentPage.set(1); }
+
+  resetFilters(): void {
+    this.filterLevel.set(null);
+    this.filterTerm.set(null);
+    this.filterDepartment.set(null);
+    this.currentPage.set(1);
+  }
 
   onFormChange(ev: { key: string; value: any }): void {
     this.updateField(ev.key as any, ev.value);

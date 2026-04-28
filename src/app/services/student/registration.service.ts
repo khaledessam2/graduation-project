@@ -37,7 +37,9 @@ export class RegistrationService {
               code: c.code ?? c.course_code ?? '',
               name: c.name ?? c.course_name ?? '',
               creditHours: c.credits ?? c.creditHours ?? c.credit_hours ?? 3,
-              level: c.level ?? 0,
+              level: c.level,
+              term: c.term,
+              department: c.department ?? c.dept ?? '',
               capacity: c.capacity ?? 0,
               prerequisites: Array.isArray(c.prerequisites)
                 ? c.prerequisites

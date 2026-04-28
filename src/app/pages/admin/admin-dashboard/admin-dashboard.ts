@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { AdminStatsService } from '../../../services/admin/admin-stats.service';
@@ -26,6 +26,18 @@ export class AdminDashboardComponent implements OnInit {
   });
 
   recentRegistrations = signal<RecentRegistration[]>([]);
+  searchQuery = signal('');
+
+  filteredRegistrations = computed(() => {
+    const q = this.searchQuery().toLowerCase().trim();
+    if (!q) return this.recentRegistrations();
+    return this.recentRegistrations().filter(r =>
+      r.studentName?.toLowerCase().includes(q) ||
+      r.studentId?.toString().toLowerCase().includes(q) ||
+      r.courseName?.toLowerCase().includes(q) ||
+      r.courseCode?.toLowerCase().includes(q)
+    );
+  });
 
   ngOnInit(): void {
     this.loading.set(true);

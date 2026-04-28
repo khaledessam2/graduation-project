@@ -78,11 +78,11 @@ export class AuthService {
     );
   }
 
-  /** Called after dashboard loads to sync GPA / hours into the user signal */
-  updateStats(gpa: number, passedHours: number, availableHours: number): void {
+  /** Called after dashboard loads to sync GPA / hours / name into the user signal */
+  updateStats(gpa: number, passedHours: number, availableHours: number, name?: string): void {
     const user = this.currentUser();
     if (!user) return;
-    const updated: Student = { ...user, gpa, passedHours, availableHours };
+    const updated: Student = { ...user, gpa, passedHours, availableHours, ...(name ? { name } : {}) };
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updated));
     this.currentUser.set(updated);
   }
