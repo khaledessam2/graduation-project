@@ -1,40 +1,57 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
-import { LoginComponent } from './pages/login/login';
-import { MainLayoutComponent } from './layout/main-layout';
-import { DashboardComponent } from './pages/student/dashboard/dashboard';
-import { RegisterCoursesComponent } from './pages/student/register-courses/register-courses';
-import { GradesComponent } from './pages/student/grades/grades';
-import { ProfileComponent } from './pages/student/profile/profile';
-import { TimetableComponent } from './pages/student/timetable/timetable';
-import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard';
-import { AdminStudentsComponent } from './pages/admin/admin-students/admin-students';
-import { AdminCoursesComponent } from './pages/admin/admin-courses/admin-courses';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login').then(m => m.LoginComponent),
+  },
   {
     path: '',
-    component: MainLayoutComponent,
+    loadComponent: () => import('./layout/main-layout').then(m => m.MainLayoutComponent),
     canActivate: [authGuard],
     children: [
-      { path: 'dashboard', component: DashboardComponent},
-      { path: 'register-courses', component: RegisterCoursesComponent },
-      { path: 'grades', component: GradesComponent },
-      { path: 'profile', component: ProfileComponent },
-      { path: 'timetable', component: TimetableComponent },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/student/dashboard/dashboard').then(m => m.DashboardComponent),
+      },
+      {
+        path: 'register-courses',
+        loadComponent: () => import('./pages/student/register-courses/register-courses').then(m => m.RegisterCoursesComponent),
+      },
+      {
+        path: 'grades',
+        loadComponent: () => import('./pages/student/grades/grades').then(m => m.GradesComponent),
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/student/profile/profile').then(m => m.ProfileComponent),
+      },
+      {
+        path: 'timetable',
+        loadComponent: () => import('./pages/student/timetable/timetable').then(m => m.TimetableComponent),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
   {
     path: 'admin',
-    component: MainLayoutComponent,
+    loadComponent: () => import('./layout/main-layout').then(m => m.MainLayoutComponent),
     canActivate: [adminGuard],
     children: [
-      { path: 'dashboard', component: AdminDashboardComponent },
-      { path: 'students', component: AdminStudentsComponent  },
-      { path: 'courses', component: AdminCoursesComponent   },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboardComponent),
+      },
+      {
+        path: 'students',
+        loadComponent: () => import('./pages/admin/admin-students/admin-students').then(m => m.AdminStudentsComponent),
+      },
+      {
+        path: 'courses',
+        loadComponent: () => import('./pages/admin/admin-courses/admin-courses').then(m => m.AdminCoursesComponent),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
