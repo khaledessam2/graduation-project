@@ -176,44 +176,6 @@
     />
   </div>
 
-  <!-- Summary + Confirm -->
-  @if (courses().length > 0) {
-  <div class="bg-white mb-0 rounded-2xl p-6 shadow-sm border border-slate-100 text-center space-y-4">
-    <h3 class="text-lg font-semibold text-[#075392E0]">{{ 'REGISTER.SUMMARY_TITLE' | translate }}</h3>
-
-    <div class="flex justify-start flex-wrap">
-      <div class="flex justify-between w-full items-center">
-        <p class="text-2x text-slate-500 mt-0.5">{{ 'REGISTER.REGISTERED_COURSES_LABEL' | translate }}</p>
-        <p class="text-2xl font-bold text-slate-800">{{ pendingCount() }}</p>
-      </div>
-      <div class="flex justify-between w-full items-center">
-        <p class="text-2x text-slate-500 mt-0.5">{{ 'REGISTER.TOTAL_CREDIT_HOURS' | translate }}</p>
-        <p class="text-2xl font-bold" style="color: var(--color-primary)">
-          {{ pendingHoursTotal() }}<span class="text-slate-400 text-lg font-normal">/{{ availableHours() }}</span>
-        </p>
-      </div>
-    </div>
-
-    @if (confirmMsg()) {
-      <div
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
-        [class]="confirmSuccess() ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'"
-      >
-        <ion-icon [name]="confirmSuccess() ? 'checkmark-circle-outline' : 'alert-circle-outline'" class="text-base"></ion-icon>
-        {{ confirmMsg() }}
-      </div>
-    }
-
-    <button
-      class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl text-white text-sm font-semibold transition-all w-full bg-[#075392E0] disabled:opacity-40 disabled:cursor-not-allowed hover:enabled:opacity-90"
-      [disabled]="pendingCount() === 0"
-      (click)="confirm()"
-    >
-      <ion-icon name="checkmark-circle-outline" class="text-lg"></ion-icon>
-      {{ 'REGISTER.CONFIRM' | translate }}
-    </button>
-  </div>
-  }
 
 </div>
 

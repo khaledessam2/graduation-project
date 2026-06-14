@@ -74,12 +74,6 @@ export class RegisterCoursesComponent implements OnInit {
   selectedCourse = signal<Course | null>(null);
   private courseHistory = signal<Course[]>([]);
   hasHistory = computed(() => this.courseHistory().length > 0);
-  confirmMsg = signal('');
-  confirmSuccess = signal(false);
-
-  availableHours = computed(() => this.auth.currentUser()?.availableHours ?? 18);
-  pendingCount = computed(() => this.pendingIds().length);
-  pendingHoursTotal = computed(() => this.registrationService.pendingHours);
 
   ngOnInit(): void {
     this.registrationService.loadAvailableCourses().subscribe();
@@ -92,7 +86,24 @@ export class RegisterCoursesComponent implements OnInit {
 
   register(course: Course): void {
     if (!this.isRegistered(course.id)) {
-      this.registrationService.registerCourse(course.id);
+      this.registrationService.registerCourse(course.id).subscribe((res: any) => {
+        if (res?.success === false) {
+          this.toast.add({
+            severity: 'error',
+            summary: this.translate.instant('REGISTER.TOAST_TITLE'),
+            detail: res.message ?? this.translate.instant('REGISTER.ERROR'),
+            life: 4000,
+          });
+        } else {
+          this.toast.add({
+            severity: 'success',
+            summary: this.translate.instant('REGISTER.TOAST_TITLE'),
+            detail: this.translate.instant('REGISTER.SUCCESS'),
+            life: 4000,
+          });
+          this.registrationService.loadAvailableCourses().subscribe();
+        }
+      });
     } else {
       this.registrationService.unregisterCourse(course.id);
     }
@@ -120,31 +131,6 @@ export class RegisterCoursesComponent implements OnInit {
   closePrereqModal(): void {
     this.selectedCourse.set(null);
     this.courseHistory.set([]);
-  }
-
-  confirm(): void {
-    if (this.pendingIds().length === 0) {
-      this.confirmSuccess.set(false);
-      this.confirmMsg.set(this.translate.instant('REGISTER.NO_COURSES_SELECTED'));
-      return;
-    }
-    this.registrationService.confirmRegistration().subscribe((res) => {
-      if (res?.success === false) {
-        this.confirmSuccess.set(false);
-        this.confirmMsg.set(res.message ?? this.translate.instant('REGISTER.ERROR'));
-      } else {
-        this.confirmSuccess.set(true);
-        this.confirmMsg.set(this.translate.instant('REGISTER.SUCCESS'));
-        setTimeout(() => this.confirmMsg.set(''), 3000);
-        this.toast.add({
-          severity: 'success',
-          summary: this.translate.instant('REGISTER.TOAST_TITLE'),
-          detail: this.translate.instant('REGISTER.SUCCESS'),
-          life: 4000,
-        });
-        this.registrationService.loadAvailableCourses().subscribe();
-      }
-    });
   }
 
   isPrereqPassed(prereq: string): boolean {

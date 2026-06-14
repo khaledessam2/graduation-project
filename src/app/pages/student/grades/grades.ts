@@ -1,22 +1,35 @@
-import { Component, inject, computed, signal, OnInit } from '@angular/core';
+import { Component, inject, computed, signal, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { GradesService } from '../../../services/student/grades.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-grades',
-  imports: [TranslateModule, PaginationComponent],
+  imports: [TranslateModule, PaginationComponent, FormsModule],
   templateUrl: './grades.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class GradesComponent implements OnInit {
   gradesService = inject(GradesService);
   grades = this.gradesService.grades;
 
+  searchQuery = signal('');
+
+  filteredGrades = computed(() => {
+    const q = this.searchQuery().toLowerCase().trim();
+    if (!q) return this.grades();
+    return this.grades().filter(g =>
+      g.courseName.toLowerCase().includes(q) ||
+      g.semester?.toLowerCase().includes(q)
+    );
+  });
+
   readonly pageSize = 10;
   currentPage = signal(1);
   paginatedGrades = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize;
-    return this.grades().slice(start, start + this.pageSize);
+    return this.filteredGrades().slice(start, start + this.pageSize);
   });
 
   ngOnInit(): void {

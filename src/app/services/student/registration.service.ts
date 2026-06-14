@@ -65,30 +65,21 @@ export class RegistrationService {
       );
   }
 
-  registerCourse(courseId: number): void {
-    const current = this.pendingCourseIds();
-    if (!current.includes(courseId)) {
-      this.pendingCourseIds.set([...current, courseId]);
-    }
-  }
-
-  unregisterCourse(courseId: number): void {
-    this.pendingCourseIds.set(this.pendingCourseIds().filter((id) => id !== courseId));
-  }
-
-  confirmRegistration(): Observable<any> {
-    const codes = this.pendingCourseIds()
-      .map((id) => this.availableCourses().find((c) => c.id === id)?.code)
-      .filter(Boolean) as string[];
+  registerCourse(courseId: number): Observable<any> {
+    const course = this.availableCourses().find((c) => c.id === courseId);
+    if (!course) return of({ success: false });
 
     return this.http
       .post<any>(`${this.apiUrl}/api/register-course`, {
         universityId: this.auth.getUniversityId(),
-        requestedCourses: codes,
+        requestedCourses: [course.code],
       })
       .pipe(
         tap(() => {
-          this.pendingCourseIds.set([]);
+          const current = this.pendingCourseIds();
+          if (!current.includes(courseId)) {
+            this.pendingCourseIds.set([...current, courseId]);
+          }
         }),
         catchError((err) => {
           const msg = err.error?.message ?? 'Registration failed';
@@ -96,6 +87,10 @@ export class RegistrationService {
           return of({ success: false, message: msg });
         }),
       );
+  }
+
+  unregisterCourse(courseId: number): void {
+    this.pendingCourseIds.set(this.pendingCourseIds().filter((id) => id !== courseId));
   }
 
   get pendingHours(): number {

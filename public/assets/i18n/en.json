@@ -101,7 +101,8 @@
     "SEMESTER": "Semester",
     "GRADE": "Grade",
     "RECOGNITION": "Recognition",
-    "NO_GRADES": "No grades available."
+    "NO_GRADES": "No grades available.",
+    "SEARCH_PLACEHOLDER": "Search by course name or semester..."
   },
   "PROFILE": {
     "TITLE": "Profile",
@@ -139,7 +140,8 @@
     "DAY": "Day",
     "TIME": "Time",
     "LOCATION": "Location",
-    "NO_ENTRIES": "No schedule found for registered courses."
+    "NO_ENTRIES": "No schedule found for registered courses.",
+    "SEARCH_PLACEHOLDER": "Search by course, code or location..."
   },
   "PAGINATION": {
     "SHOWING": "Showing {{from}}–{{to}} of {{total}}",

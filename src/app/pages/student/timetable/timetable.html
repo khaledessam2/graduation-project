@@ -21,6 +21,20 @@
       <span class="text-white text-sm font-semibold">{{ 'TIMETABLE.SCHEDULE' | translate }}</span>
     </div>
 
+    <!-- Search -->
+    <div class="px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
+      <div class="relative">
+        <ion-icon name="search-outline" class="absolute start-3 top-1/2 -translate-y-1/2 text-slate-400 text-base pointer-events-none"></ion-icon>
+        <input
+          type="text"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event); currentPage.set(1)"
+          placeholder="{{ 'TIMETABLE.SEARCH_PLACEHOLDER' | translate }}"
+          class="w-full ps-9 pe-4 py-2 text-sm rounded-lg border border-slate-200 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#075392]/30 focus:border-[#075392]"
+        />
+      </div>
+    </div>
+
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
@@ -90,7 +104,7 @@
       </table>
     </div>
     <app-pagination
-      [total]="timetableService.entries().length"
+      [total]="filteredEntries().length"
       [pageSize]="pageSize"
       [currentPage]="currentPage()"
       (pageChange)="currentPage.set($event)"
