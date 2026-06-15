@@ -1,26 +1,16 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { AuthService } from '../auth.service';
 import { environment } from '../../../environments/environment';
 import { AdminStudentDto, AcademicRecord, AdminRegisteredCourse } from '../../models/admin/admin-student.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminStudentsService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private apiUrl = environment.apiUrl;
 
-  private get headers(): HttpHeaders {
-    const token = this.auth.getToken();
-    return new HttpHeaders({
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      'x-user-role': 'admin',
-    });
-  }
-
   getStudents(): Observable<AdminStudentDto[]> {
-    return this.http.get<any>(`${this.apiUrl}/api/admin/students`, { headers: this.headers }).pipe(
+    return this.http.get<any>(`${this.apiUrl}/api/admin/students`).pipe(
       map((res) => {
         const list: any[] = res.data ?? res ?? [];
         return list.map((s) => ({
@@ -55,20 +45,14 @@ export class AdminStudentsService {
   }
 
   createStudent(student: AdminStudentDto): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/api/admin/students`, this.toPayload(student), {
-      headers: this.headers,
-    });
+    return this.http.post<any>(`${this.apiUrl}/api/admin/students`, this.toPayload(student));
   }
 
   updateStudent(id: string, student: AdminStudentDto): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/api/admin/students/${id}`, this.toPayload(student), {
-      headers: this.headers,
-    });
+    return this.http.put<any>(`${this.apiUrl}/api/admin/students/${id}`, this.toPayload(student));
   }
 
   deleteStudent(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/api/admin/students/${id}`, {
-      headers: this.headers,
-    });
+    return this.http.delete<any>(`${this.apiUrl}/api/admin/students/${id}`);
   }
 }

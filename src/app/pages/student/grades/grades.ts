@@ -1,29 +1,34 @@
 import { Component, inject, computed, signal, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { GradesService } from '../../../services/student/grades.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
+import { Select } from 'primeng/select';
 
 @Component({
   selector: 'app-grades',
-  imports: [TranslateModule, PaginationComponent, FormsModule],
+  imports: [TranslateModule, PaginationComponent, FormsModule, Select],
   templateUrl: './grades.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class GradesComponent implements OnInit {
   gradesService = inject(GradesService);
+  private translate = inject(TranslateService);
   grades = this.gradesService.grades;
 
-  searchQuery = signal('');
+  filterLevel = signal<number | null>(null);
+  filterTerm = signal<number | null>(null);
+  availableLevels = computed(() => [
+    { label: this.translate.instant('GRADES.FILTER_ALL_LEVELS'), value: null },
+    ...[1, 2, 3, 4].map(v => ({ label: `${this.translate.instant('GRADES.LEVEL')} ${v}`, value: v })),
+  ]);
 
-  filteredGrades = computed(() => {
-    const q = this.searchQuery().toLowerCase().trim();
-    if (!q) return this.grades();
-    return this.grades().filter(g =>
-      g.courseName.toLowerCase().includes(q) ||
-      g.semester?.toLowerCase().includes(q)
-    );
-  });
+  availableTerms = computed(() => [
+    { label: this.translate.instant('GRADES.FILTER_ALL_TERMS'), value: null },
+    ...[1, 2].map(v => ({ label: `${this.translate.instant('GRADES.Term')} ${v}`, value: v })),
+  ]);
+
+  filteredGrades = computed(() => this.grades());
 
   readonly pageSize = 10;
   currentPage = signal(1);
@@ -33,6 +38,32 @@ export class GradesComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.gradesService.loadGrades().subscribe(() => {
+      const firstGrade = this.gradesService.grades()[0];
+      if (firstGrade?.level != null) {
+        this.filterLevel.set(firstGrade.level);
+        this.filterTerm.set(firstGrade.term ?? null);
+        this.gradesService.loadGrades(firstGrade.level, firstGrade.term ?? undefined).subscribe();
+      }
+    });
+  }
+
+  onLevelChange(value: number | null): void {
+    this.filterLevel.set(value);
+    this.currentPage.set(1);
+    this.gradesService.loadGrades(value ?? undefined, this.filterTerm() ?? undefined).subscribe();
+  }
+
+  onTermChange(value: number | null): void {
+    this.filterTerm.set(value);
+    this.currentPage.set(1);
+    this.gradesService.loadGrades(this.filterLevel() ?? undefined, value ?? undefined).subscribe();
+  }
+
+  clearFilters(): void {
+    this.filterLevel.set(null);
+    this.filterTerm.set(null);
+    this.currentPage.set(1);
     this.gradesService.loadGrades().subscribe();
   }
 

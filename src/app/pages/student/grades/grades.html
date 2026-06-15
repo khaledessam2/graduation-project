@@ -8,18 +8,49 @@
   <!-- Grades Table -->
   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
-    <!-- Search -->
-    <div class="px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
-      <div class="relative">
-        <ion-icon name="search-outline" class="absolute start-3 top-1/2 -translate-y-1/2 text-slate-400 text-base pointer-events-none"></ion-icon>
-        <input
-          type="text"
-          [ngModel]="searchQuery()"
-          (ngModelChange)="searchQuery.set($event); currentPage.set(1)"
-          placeholder="{{ 'GRADES.SEARCH_PLACEHOLDER' | translate }}"
-          class="w-full ps-9 pe-4 py-2 text-sm rounded-lg border border-slate-200 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#075392]/30 focus:border-[#075392]"
-        />
+    <!-- Filters -->
+    <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/50 space-y-3">
+      <div class="flex flex-wrap gap-4">
+        <div class="flex flex-col gap-1.5 flex-1 min-w-[150px]">
+          <label class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+            <ion-icon name="layers-outline" class="text-[#075392E0]"></ion-icon>
+            {{ 'GRADES.LEVEL' | translate }}
+          </label>
+          <p-select
+            [options]="availableLevels()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="filterLevel()"
+            (onChange)="onLevelChange($event.value)"
+            class="w-full"
+          />
+        </div>
+        <div class="flex flex-col gap-1.5 flex-1 min-w-[150px]">
+          <label class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+            <ion-icon name="calendar-outline" class="text-[#075392E0]"></ion-icon>
+            {{ 'GRADES.Term' | translate }}
+          </label>
+          <p-select
+            [options]="availableTerms()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="filterTerm()"
+            (onChange)="onTermChange($event.value)"
+            class="w-full"
+          />
+        </div>
       </div>
+      @if (filterLevel() !== null || filterTerm() !== null) {
+        <div class="flex justify-end">
+          <button
+            class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 transition-colors"
+            (click)="clearFilters()"
+          >
+            <ion-icon name="close-circle-outline" class="text-sm"></ion-icon>
+            {{ 'GRADES.FILTER_RESET' | translate }}
+          </button>
+        </div>
+      }
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-sm">

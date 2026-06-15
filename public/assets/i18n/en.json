@@ -102,7 +102,13 @@
     "GRADE": "Grade",
     "RECOGNITION": "Recognition",
     "NO_GRADES": "No grades available.",
-    "SEARCH_PLACEHOLDER": "Search by course name or semester..."
+    "SEARCH_PLACEHOLDER": "Search by course name or semester...",
+    "SEARCH_LABEL": "Search",
+    "LEVEL": "Level",
+    "Term": "Term",
+    "FILTER_ALL_LEVELS": "All Levels",
+    "FILTER_ALL_TERMS": "All Terms",
+    "FILTER_RESET": "Clear Filters"
   },
   "PROFILE": {
     "TITLE": "Profile",
@@ -261,6 +267,12 @@
     "ERROR_SAVE": "Failed to save changes. Please try again.",
     "ERROR": "Error",
     "VALIDATION_ERROR": "Incomplete Data",
-    "ERROR_DELETE": "Failed to delete. Please try again."
+    "ERROR_DELETE": "Failed to delete. Please try again.",
+    "REG_STATUS_TITLE": "Registration Status",
+    "REG_STATUS_OPEN": "Registration is open",
+    "REG_STATUS_CLOSED": "Registration is closed",
+    "REG_STATUS_OPEN_BTN": "Open Registration",
+    "REG_STATUS_CLOSE_BTN": "Close Registration",
+    "REG_STATUS_ERROR": "Failed to update registration status. Please try again."
   }
 }

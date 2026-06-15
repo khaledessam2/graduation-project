@@ -2,6 +2,7 @@ import { Component, inject, signal, computed, OnInit, CUSTOM_ELEMENTS_SCHEMA } f
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { AdminStatsService } from '../../../services/admin/admin-stats.service';
+import { AdminRegistrationStatusService } from '../../../services/admin/admin-registration-status.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecentRegistration } from '../../../models/admin/recent-registration.model';
 
@@ -13,7 +14,8 @@ import { RecentRegistration } from '../../../models/admin/recent-registration.mo
 })
 export class AdminDashboardComponent implements OnInit {
   auth         = inject(AuthService);
-  private statsService = inject(AdminStatsService);
+  private statsService  = inject(AdminStatsService);
+  private regStatusSvc  = inject(AdminRegistrationStatusService);
 
   loading = signal(false);
   loadError = signal('');
@@ -27,6 +29,10 @@ export class AdminDashboardComponent implements OnInit {
 
   recentRegistrations = signal<RecentRegistration[]>([]);
   searchQuery = signal('');
+
+  registrationStatus = signal<'open' | 'closed' | null>(null);
+  statusLoading = signal(false);
+  statusError = signal('');
 
   filteredRegistrations = computed(() => {
     const q = this.searchQuery().toLowerCase().trim();
@@ -57,6 +63,31 @@ export class AdminDashboardComponent implements OnInit {
       error: () => {
         this.loadError.set('ADMIN.ERROR_LOAD');
         this.loading.set(false);
+      },
+    });
+
+    this.regStatusSvc.getStatus().subscribe({
+      next: (status) => this.registrationStatus.set(status),
+      error: () => {},
+    });
+  }
+
+  toggleRegistration(): void {
+    const current = this.registrationStatus();
+    if (current === null || this.statusLoading()) return;
+
+    const next: 'open' | 'closed' = current === 'open' ? 'closed' : 'open';
+    this.statusLoading.set(true);
+    this.statusError.set('');
+
+    this.regStatusSvc.setStatus(next).subscribe({
+      next: (updated) => {
+        this.registrationStatus.set(updated);
+        this.statusLoading.set(false);
+      },
+      error: () => {
+        this.statusError.set('ADMIN.REG_STATUS_ERROR');
+        this.statusLoading.set(false);
       },
     });
   }

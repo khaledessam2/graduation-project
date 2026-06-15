@@ -15,17 +15,18 @@ export class GradesService {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  loadGrades(): Observable<any> {
+  loadGrades(level?: number, term?: number): Observable<any> {
     this.loading.set(true);
     this.error.set(null);
 
+    const body: Record<string, any> = { universityId: this.auth.getUniversityId() };
+    if (level != null) body['level'] = level;
+    if (term != null) body['term'] = term;
+
     return this.http
-      .post<any>(`${this.apiUrl}/api/grades`, {
-        universityId: this.auth.getUniversityId(),
-      })
+      .post<any>(`${this.apiUrl}/api/grades`, body)
       .pipe(
         tap((res) => {
-          // Spec: { success, data: [{ courseCode, semester, grade, recognition }] }
           const data = res.data ?? res;
           const raw: any[] = Array.isArray(data) ? data : (data.grades ?? []);
           this.grades.set(
@@ -35,6 +36,8 @@ export class GradesService {
               semester: g.semester ?? '',
               grade: g.grade ?? g.numeric_grade ?? 0,
               recognition: g.recognition ?? g.letter_grade ?? '',
+              level: g.level != null ? Number(g.level) : null,
+              term: g.term != null ? Number(g.term) : null,
             })),
           );
           this.loading.set(false);

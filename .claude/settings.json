@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find \"d:\\\\projects\\\\graduation-project\" -maxdepth 1 -type f -name \"*.config.*\" 2>/dev/null)",
+      "Read(//d/projects/**)",
+      "Bash(grep -E \"\\\\.ts$|app\\\\.\")"
+    ]
+  }
+}

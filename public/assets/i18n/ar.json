@@ -102,7 +102,13 @@
     "GRADE": "الدرجة",
     "RECOGNITION": "التقدير",
     "NO_GRADES": "لا توجد درجات متاحة.",
-    "SEARCH_PLACEHOLDER": "ابحث باسم المقرر أو الفصل..."
+    "SEARCH_PLACEHOLDER": "ابحث باسم المقرر أو الفصل...",
+    "SEARCH_LABEL": "بحث",
+    "LEVEL": "المستوى",
+    "Term": "الترم",
+    "FILTER_ALL_LEVELS": "كل المستويات",
+    "FILTER_ALL_TERMS": "كل الترمات",
+    "FILTER_RESET": "مسح الفلاتر"
   },
   "PROFILE": {
     "TITLE": "الملف الشخصي",
@@ -261,6 +267,12 @@
     "ERROR_SAVE": "فشل حفظ البيانات. حاول مرة أخرى.",
     "ERROR": "خطأ",
     "VALIDATION_ERROR": "بيانات غير مكتملة",
-    "ERROR_DELETE": "فشل الحذف. حاول مرة أخرى."
+    "ERROR_DELETE": "فشل الحذف. حاول مرة أخرى.",
+    "REG_STATUS_TITLE": "حالة التسجيل",
+    "REG_STATUS_OPEN": "التسجيل مفتوح",
+    "REG_STATUS_CLOSED": "التسجيل مغلق",
+    "REG_STATUS_OPEN_BTN": "فتح التسجيل",
+    "REG_STATUS_CLOSE_BTN": "إغلاق التسجيل",
+    "REG_STATUS_ERROR": "فشل تغيير حالة التسجيل. حاول مرة أخرى."
   }
 }

@@ -1,26 +1,16 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { AuthService } from '../auth.service';
 import { environment } from '../../../environments/environment';
 import { AdminCourseDto } from '../../models/admin/admin-course.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminCoursesService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private apiUrl = environment.apiUrl;
 
-  private get headers(): HttpHeaders {
-    const token = this.auth.getToken();
-    return new HttpHeaders({
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      'x-user-role': 'admin',
-    });
-  }
-
   getCourses(): Observable<AdminCourseDto[]> {
-    return this.http.get<any>(`${this.apiUrl}/api/admin/courses`, { headers: this.headers }).pipe(
+    return this.http.get<any>(`${this.apiUrl}/api/admin/courses`).pipe(
       map((res) => {
         const list: any[] = res.data ?? res ?? [];
         return list.map((c) => ({
@@ -43,20 +33,14 @@ export class AdminCoursesService {
   }
 
   createCourse(course: AdminCourseDto): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/api/admin/courses`, course, {
-      headers: this.headers,
-    });
+    return this.http.post<any>(`${this.apiUrl}/api/admin/courses`, course);
   }
 
   updateCourse(code: string, course: AdminCourseDto): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/api/admin/courses/${code}`, course, {
-      headers: this.headers,
-    });
+    return this.http.put<any>(`${this.apiUrl}/api/admin/courses/${code}`, course);
   }
 
   deleteCourse(code: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/api/admin/courses/${code}`, {
-      headers: this.headers,
-    });
+    return this.http.delete<any>(`${this.apiUrl}/api/admin/courses/${code}`);
   }
 }

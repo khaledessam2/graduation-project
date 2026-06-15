@@ -72,6 +72,62 @@
 
   </div>
 
+  <!-- Registration Status Toggle -->
+  <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span
+          class="flex items-center justify-center w-10 h-10 rounded-xl"
+          [class]="registrationStatus() === 'open' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'"
+        >
+          <ion-icon
+            [name]="registrationStatus() === 'open' ? 'lock-open-outline' : 'lock-closed-outline'"
+            class="text-xl"
+          ></ion-icon>
+        </span>
+        <div>
+          <p class="text-sm font-semibold text-slate-700">{{ 'ADMIN.REG_STATUS_TITLE' | translate }}</p>
+          @if (registrationStatus() === null) {
+            <div class="h-4 w-20 rounded bg-slate-200 animate-pulse mt-1"></div>
+          } @else {
+            <p
+              class="text-xs font-medium mt-0.5"
+              [class]="registrationStatus() === 'open' ? 'text-green-600' : 'text-red-500'"
+            >
+              {{ (registrationStatus() === 'open' ? 'ADMIN.REG_STATUS_OPEN' : 'ADMIN.REG_STATUS_CLOSED') | translate }}
+            </p>
+          }
+        </div>
+      </div>
+
+      <button
+        (click)="toggleRegistration()"
+        [disabled]="registrationStatus() === null || statusLoading()"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        [class]="registrationStatus() === 'open'
+          ? 'bg-red-50 text-red-600 hover:bg-red-100'
+          : 'bg-green-50 text-green-700 hover:bg-green-100'"
+      >
+        @if (statusLoading()) {
+          <ion-icon name="sync-outline" class="text-base animate-spin"></ion-icon>
+        } @else {
+          <ion-icon
+            [name]="registrationStatus() === 'open' ? 'lock-closed-outline' : 'lock-open-outline'"
+            class="text-base"
+          ></ion-icon>
+        }
+        {{ (registrationStatus() === 'open' ? 'ADMIN.REG_STATUS_CLOSE_BTN' : 'ADMIN.REG_STATUS_OPEN_BTN') | translate }}
+      </button>
+    </div>
+
+    @if (statusError()) {
+      <p class="mt-3 text-xs text-red-500 flex items-center gap-1">
+        <ion-icon name="alert-circle-outline" class="text-sm shrink-0"></ion-icon>
+        {{ statusError() | translate }}
+      </p>
+    }
+  </div>
+
   <!-- Search bar -->
   <div class="bg-white rounded-2xl px-4 py-3 shadow-sm border border-slate-100 flex items-center gap-3">
     <ion-icon name="search-outline" class="text-slate-400 text-lg shrink-0"></ion-icon>

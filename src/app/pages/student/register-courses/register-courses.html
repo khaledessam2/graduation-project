@@ -22,9 +22,7 @@
             optionLabel="label"
             optionValue="value"
             [ngModel]="filterLevel()"
-            (ngModelChange)="filterLevel.set($event); currentPage.set(1)"
-            [placeholder]="'REGISTER.FILTER_ALL_LEVELS' | translate"
-            [showClear]="true"
+            (onChange)="onLevelChange($event.value)"
             class="w-full"
           />
         </div>
@@ -38,9 +36,7 @@
             optionLabel="label"
             optionValue="value"
             [ngModel]="filterTerm()"
-            (ngModelChange)="filterTerm.set($event); currentPage.set(1)"
-            [placeholder]="'REGISTER.FILTER_ALL_TERMS' | translate"
-            [showClear]="true"
+            (onChange)="onTermChange($event.value)"
             class="w-full"
           />
         </div>

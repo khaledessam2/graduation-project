@@ -1,27 +1,17 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { AuthService } from '../auth.service';
 import { environment } from '../../../environments/environment';
 import { AdminStats } from '../../models/admin/admin-stats.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminStatsService {
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
   private apiUrl = environment.apiUrl;
-
-  private get headers(): HttpHeaders {
-    const token = this.auth.getToken();
-    return new HttpHeaders({
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      'x-user-role': 'admin',
-    });
-  }
 
   getStats(): Observable<AdminStats> {
     return this.http
-      .post<any>(`${this.apiUrl}/api/admin/stats`, {}, { headers: this.headers })
+      .post<any>(`${this.apiUrl}/api/admin/stats`, {})
       .pipe(
         map((res) => {
           const d = res.data ?? res;

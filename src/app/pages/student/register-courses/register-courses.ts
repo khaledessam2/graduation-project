@@ -34,34 +34,42 @@ export class RegisterCoursesComponent implements OnInit {
   );
 
   filteredCourses = computed(() => {
-    const level = this.filterLevel();
-    const term = this.filterTerm();
     const dept = this.filterDepartment();
-    return this.courses().filter(c =>
-      (level === null || c.level === level) &&
-      (term === null || c.term === term) &&
-      (dept === null || c.department === dept)
-    );
+    if (dept === null) return this.courses();
+    return this.courses().filter(c => c.department === dept);
   });
 
-  availableLevels = computed(() =>
-    [...new Set(this.courses().map(c => c.level))].sort((a, b) => a - b)
-      .map(v => ({ label: `${this.translate.instant('REGISTER.LEVEL')} ${v}`, value: v }))
-  );
-  availableTerms = computed(() =>
-    [...new Set(this.courses().map(c => c.term))].sort((a, b) => a - b)
-      .map(v => ({ label: `${this.translate.instant('REGISTER.Term')} ${v}`, value: v }))
-  );
+  availableLevels = computed(() => [
+    { label: this.translate.instant('REGISTER.FILTER_ALL_LEVELS'), value: null },
+    ...[1, 2, 3, 4].map(v => ({ label: `${this.translate.instant('REGISTER.LEVEL')} ${v}`, value: v })),
+  ]);
+  availableTerms = computed(() => [
+    { label: this.translate.instant('REGISTER.FILTER_ALL_TERMS'), value: null },
+    ...[1, 2].map(v => ({ label: `${this.translate.instant('REGISTER.Term')} ${v}`, value: v })),
+  ]);
   availableDepartments = computed(() =>
     [...new Set(this.courses().map(c => c.department).filter(Boolean))].sort()
       .map(v => ({ label: v, value: v }))
   );
+
+  onLevelChange(value: number | null): void {
+    this.filterLevel.set(value);
+    this.currentPage.set(1);
+    this.registrationService.loadAvailableCourses(value ?? undefined, this.filterTerm() ?? undefined).subscribe();
+  }
+
+  onTermChange(value: number | null): void {
+    this.filterTerm.set(value);
+    this.currentPage.set(1);
+    this.registrationService.loadAvailableCourses(this.filterLevel() ?? undefined, value ?? undefined).subscribe();
+  }
 
   clearFilters(): void {
     this.filterLevel.set(null);
     this.filterTerm.set(null);
     this.filterDepartment.set(null);
     this.currentPage.set(1);
+    this.registrationService.loadAvailableCourses().subscribe();
   }
 
   readonly pageSize = 10;
@@ -76,7 +84,14 @@ export class RegisterCoursesComponent implements OnInit {
   hasHistory = computed(() => this.courseHistory().length > 0);
 
   ngOnInit(): void {
-    this.registrationService.loadAvailableCourses().subscribe();
+    this.registrationService.loadAvailableCourses().subscribe(() => {
+      const first = this.registrationService.availableCourses()[0];
+      if (first?.level != null) {
+        this.filterLevel.set(first.level);
+        this.filterTerm.set(first.term ?? null);
+        this.registrationService.loadAvailableCourses(first.level, first.term ?? undefined).subscribe();
+      }
+    });
     this.gradesService.loadGrades().subscribe();
   }
 
@@ -101,7 +116,7 @@ export class RegisterCoursesComponent implements OnInit {
             detail: this.translate.instant('REGISTER.SUCCESS'),
             life: 4000,
           });
-          this.registrationService.loadAvailableCourses().subscribe();
+          this.registrationService.loadAvailableCourses(this.filterLevel() ?? undefined, this.filterTerm() ?? undefined).subscribe();
         }
       });
     } else {

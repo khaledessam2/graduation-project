@@ -16,14 +16,16 @@ export class RegistrationService {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  loadAvailableCourses(): Observable<any> {
+  loadAvailableCourses(level?: number, term?: number): Observable<any> {
     this.loading.set(true);
     this.error.set(null);
 
+    const body: Record<string, any> = { universityId: this.auth.getUniversityId() };
+    if (level != null) body['level'] = level;
+    if (term != null) body['term'] = term;
+
     return this.http
-      .post<any>(`${this.apiUrl}/api/courses/available`, {
-        universityId: this.auth.getUniversityId(),
-      })
+      .post<any>(`${this.apiUrl}/api/courses/available`, body)
       .pipe(
         tap((res) => {
           // Spec: { success, data: [{ ...Course, isLocked, lockReason }] }

@@ -4,4 +4,6 @@ export interface Grade {
   semester: string;
   grade: number;
   recognition: string;
+  level: number | null;
+  term: number | null;
 }
