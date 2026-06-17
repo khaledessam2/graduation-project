@@ -40,30 +40,45 @@ export class RegistrationService {
             this.serverMessage.set(res.message);
           }
 
-          this.availableCourses.set(
-            raw.map((c, i) => ({
-              id: i + 1,
-              code: c.code ?? c.course_code ?? '',
-              name: c.name ?? c.course_name ?? '',
-              creditHours: c.credits ?? c.creditHours ?? c.credit_hours ?? 3,
-              level: c.level,
-              term: c.term,
-              department: c.department ?? c.dept ?? '',
-              capacity: c.capacity ?? 0,
-              prerequisites: Array.isArray(c.prerequisites)
-                ? c.prerequisites
-                : c.prerequisites
-                  ? String(c.prerequisites)
-                      .split(',')
-                      .map((s: string) => s.trim())
-                      .filter(Boolean)
-                  : [],
-              status: c.status ?? 'Available',
-              professor: c.professor ?? '',
-              isLocked: c.isLocked ?? false,
-              lockReason: c.lockReason ?? null,
-            })),
+          const oldCourses = this.availableCourses();
+          const pendingCodes = new Set(
+            this.pendingCourseIds()
+              .map(id => oldCourses.find(c => c.id === id)?.code)
+              .filter((code): code is string => !!code)
           );
+
+          const newCourses = raw.map((c, i) => ({
+            id: i + 1,
+            code: c.code ?? c.course_code ?? '',
+            name: c.name ?? c.course_name ?? '',
+            creditHours: c.credits ?? c.creditHours ?? c.credit_hours ?? 3,
+            level: c.level,
+            term: c.term,
+            department: c.department ?? c.dept ?? '',
+            capacity: c.capacity ?? 0,
+            prerequisites: Array.isArray(c.prerequisites)
+              ? c.prerequisites
+              : c.prerequisites
+                ? String(c.prerequisites)
+                    .split(',')
+                    .map((s: string) => s.trim())
+                    .filter(Boolean)
+                : [],
+            status: c.status ?? 'Available',
+            professor: c.professor ?? '',
+            isLocked: c.isLocked ?? false,
+            lockReason: c.lockReason ?? null,
+          }));
+
+          this.availableCourses.set(newCourses);
+
+          if (pendingCodes.size > 0) {
+            const remappedIds = newCourses
+              .filter(c => pendingCodes.has(c.code))
+              .map(c => c.id);
+            this.pendingCourseIds.set(remappedIds);
+          }
+
           this.loading.set(false);
         }),
         catchError((err) => {
