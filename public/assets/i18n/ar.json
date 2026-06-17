@@ -273,6 +273,15 @@
     "REG_STATUS_CLOSED": "التسجيل مغلق",
     "REG_STATUS_OPEN_BTN": "فتح التسجيل",
     "REG_STATUS_CLOSE_BTN": "إغلاق التسجيل",
-    "REG_STATUS_ERROR": "فشل تغيير حالة التسجيل. حاول مرة أخرى."
+    "REG_STATUS_ERROR": "فشل تغيير حالة التسجيل. حاول مرة أخرى.",
+    "STUDENT_STATUS": "الحالة الأكاديمية",
+    "STATUS_REGULAR": "منتظم",
+    "STATUS_PROBATION": "تحت الملاحظة",
+    "STATUS_GRADUATED": "خريج",
+    "FILTER_ALL_STATUSES": "كل الحالات",
+    "RECALCULATE_STANDINGS": "إعادة حساب الحالات",
+    "RECALCULATING": "جاري الحساب...",
+    "RECALCULATE_SUCCESS_TITLE": "تم بنجاح",
+    "RECALCULATE_SUCCESS_MSG": "تم تحديث حالة {{count}} طالب"
   }
 }

@@ -63,6 +63,7 @@ export class AuthService {
           passedHours: 0,
           availableHours: 0,
           role: resolvedRole,
+          status: (s.status ?? 'REGULAR') as Student['status'],
         };
 
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(user));

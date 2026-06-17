@@ -15,10 +15,12 @@ export class RegistrationService {
   pendingCourseIds = signal<number[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+  serverMessage = signal<string | null>(null);
 
-  loadAvailableCourses(level?: number, term?: number): Observable<any> {
+  loadAvailableCourses(level?: number | string, term?: number | string): Observable<any> {
     this.loading.set(true);
     this.error.set(null);
+    this.serverMessage.set(null);
 
     const body: Record<string, any> = { universityId: this.auth.getUniversityId() };
     if (level != null) body['level'] = level;
@@ -33,6 +35,11 @@ export class RegistrationService {
           const raw: any[] = Array.isArray(data)
             ? data
             : (data.courses ?? data.available_courses ?? []);
+
+          if (raw.length === 0 && res.message) {
+            this.serverMessage.set(res.message);
+          }
+
           this.availableCourses.set(
             raw.map((c, i) => ({
               id: i + 1,

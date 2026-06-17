@@ -10,4 +10,5 @@ export interface Student {
   passedHours: number;
   availableHours: number;
   role: 'student' | 'admin';
+  status: 'REGULAR' | 'PROBATION' | 'GRADUATED';
 }

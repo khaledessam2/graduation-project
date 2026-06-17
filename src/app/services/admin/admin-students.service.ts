@@ -21,6 +21,7 @@ export class AdminStudentsService {
           gpa: s.gpa ?? 0,
           passedHours: s.passedHours ?? s.passed_hours ?? 0,
           year: s.yearOfStudy ?? s.year_of_study ?? s.year ?? '',
+          status: (s.status ?? 'REGULAR') as AdminStudentDto['status'],
           registeredCourses: (s.registeredCourses ?? []).map((c: any): AdminRegisteredCourse =>
             typeof c === 'string'
               ? { code: c, name: c, level: 0, term: 0, creditHours: 0, department: '' }
@@ -54,5 +55,11 @@ export class AdminStudentsService {
 
   deleteStudent(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/api/admin/students/${id}`);
+  }
+
+  recalculateAllStandings(): Observable<{ updatedCount: number }> {
+    return this.http.post<any>(`${this.apiUrl}/api/admin/students/recalculate-standings`, {}).pipe(
+      map((res) => ({ updatedCount: res.updatedCount ?? res.data?.updatedCount ?? 0 })),
+    );
   }
 }

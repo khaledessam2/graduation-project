@@ -22,6 +22,7 @@ export interface AdminStudentDto {
   year: string;
   gpa: number;
   passedHours: number;
+  status: 'REGULAR' | 'PROBATION' | 'GRADUATED';
   registeredCourses: AdminRegisteredCourse[];
   academicHistory: AcademicRecord[];
   password: string;

@@ -273,6 +273,15 @@
     "REG_STATUS_CLOSED": "Registration is closed",
     "REG_STATUS_OPEN_BTN": "Open Registration",
     "REG_STATUS_CLOSE_BTN": "Close Registration",
-    "REG_STATUS_ERROR": "Failed to update registration status. Please try again."
+    "REG_STATUS_ERROR": "Failed to update registration status. Please try again.",
+    "STUDENT_STATUS": "Academic Status",
+    "STATUS_REGULAR": "Regular",
+    "STATUS_PROBATION": "Probation",
+    "STATUS_GRADUATED": "Graduated",
+    "FILTER_ALL_STATUSES": "All Statuses",
+    "RECALCULATE_STANDINGS": "Recalculate Standings",
+    "RECALCULATING": "Recalculating...",
+    "RECALCULATE_SUCCESS_TITLE": "Success",
+    "RECALCULATE_SUCCESS_MSG": "{{count}} student standings updated"
   }
 }

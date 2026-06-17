@@ -20,6 +20,7 @@ const EMPTY_FORM = (): AdminStudentDto => ({
   year: '',
   gpa: 0,
   passedHours: 0,
+  status: 'REGULAR',
   registeredCourses: [],
   academicHistory: [],
   password: '',
@@ -50,7 +51,9 @@ export class AdminStudentsComponent implements OnInit {
   filterDepartment = signal<string | null>(null);
   filterYear = signal<string | null>(null);
   filterGpa = signal<string | null>(null);
+  filterStatus = signal<string | null>(null);
   showModal = signal(false);
+  isRecalculating = signal(false);
   editMode = signal(false);
   editOriginalId = signal('');
 
@@ -97,8 +100,14 @@ export class AdminStudentsComponent implements OnInit {
     { label: '< 3.0', value: 'low' },
   ];
 
+  statusOptions = [
+    { label: 'ADMIN.STATUS_REGULAR', value: 'REGULAR' },
+    { label: 'ADMIN.STATUS_PROBATION', value: 'PROBATION' },
+    { label: 'ADMIN.STATUS_GRADUATED', value: 'GRADUATED' },
+  ];
+
   hasActiveFilter = computed(() =>
-    this.filterDepartment() !== null || this.filterYear() !== null || this.filterGpa() !== null
+    this.filterDepartment() !== null || this.filterYear() !== null || this.filterGpa() !== null || this.filterStatus() !== null
   );
 
   filteredStudents = computed(() => {
@@ -106,6 +115,7 @@ export class AdminStudentsComponent implements OnInit {
     const dept = this.filterDepartment();
     const year = this.filterYear();
     const gpa = this.filterGpa();
+    const status = this.filterStatus();
     return this.students().filter(s => {
       if (q && !s.name.toLowerCase().includes(q) && !s.studentId.toLowerCase().includes(q)) return false;
       if (dept && s.department !== dept) return false;
@@ -113,6 +123,7 @@ export class AdminStudentsComponent implements OnInit {
       if (gpa === 'high' && s.gpa < 3.5) return false;
       if (gpa === 'mid' && (s.gpa < 3.0 || s.gpa >= 3.5)) return false;
       if (gpa === 'low' && s.gpa >= 3.0) return false;
+      if (status && s.status !== status) return false;
       return true;
     });
   });
@@ -121,7 +132,30 @@ export class AdminStudentsComponent implements OnInit {
     this.filterDepartment.set(null);
     this.filterYear.set(null);
     this.filterGpa.set(null);
+    this.filterStatus.set(null);
     this.currentPage.set(1);
+  }
+
+  recalculateStandings(): void {
+    if (this.isRecalculating()) return;
+    this.isRecalculating.set(true);
+    this.studentsService.recalculateAllStandings().subscribe({
+      next: (res) => {
+        this.isRecalculating.set(false);
+        this.toast.add({
+          severity: 'success',
+          summary: this.translate.instant('ADMIN.RECALCULATE_SUCCESS_TITLE'),
+          detail: this.translate.instant('ADMIN.RECALCULATE_SUCCESS_MSG', { count: res.updatedCount }),
+          life: 4000,
+        });
+        this.loadStudents();
+      },
+      error: (err) => {
+        this.isRecalculating.set(false);
+        const msg = err?.error?.message ?? this.translate.instant('ADMIN.ERROR_SAVE');
+        this.toast.add({ severity: 'error', summary: this.translate.instant('ADMIN.ERROR'), detail: msg, life: 5000 });
+      },
+    });
   }
 
   readonly pageSize = 10;

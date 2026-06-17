@@ -51,13 +51,17 @@ export class GradesComponent implements OnInit {
   onLevelChange(value: number | null): void {
     this.filterLevel.set(value);
     this.currentPage.set(1);
-    this.gradesService.loadGrades(value ?? undefined, this.filterTerm() ?? undefined).subscribe();
+    const level = value === null ? 'all' : value;
+    const term = this.filterTerm() === null ? 'all' : this.filterTerm()!;
+    this.gradesService.loadGrades(level, term).subscribe();
   }
 
   onTermChange(value: number | null): void {
     this.filterTerm.set(value);
     this.currentPage.set(1);
-    this.gradesService.loadGrades(this.filterLevel() ?? undefined, value ?? undefined).subscribe();
+    const level = this.filterLevel() === null ? 'all' : this.filterLevel()!;
+    const term = value === null ? 'all' : value;
+    this.gradesService.loadGrades(level, term).subscribe();
   }
 
   clearFilters(): void {

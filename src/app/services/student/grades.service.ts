@@ -15,7 +15,7 @@ export class GradesService {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  loadGrades(level?: number, term?: number): Observable<any> {
+  loadGrades(level?: number | string, term?: number | string): Observable<any> {
     this.loading.set(true);
     this.error.set(null);
 

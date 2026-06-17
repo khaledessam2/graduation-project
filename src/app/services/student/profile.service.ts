@@ -39,6 +39,7 @@ export class ProfileService {
           passedHours: p.passedHours ?? p.passed_hours ?? current?.passedHours ?? 0,
           availableHours: p.availableHours ?? p.available_hours ?? current?.availableHours ?? 18,
           role: 'student',
+          status: (p.status ?? current?.status ?? 'REGULAR') as Student['status'],
         };
         this.profile.set(student);
         this.auth.updateStats(student.gpa, student.passedHours, student.availableHours);

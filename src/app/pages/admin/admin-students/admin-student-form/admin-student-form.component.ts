@@ -24,6 +24,12 @@ export class AdminStudentFormComponent {
   save = output<void>();
   cancel = output<void>();
 
+  statusOptions = [
+    { labelKey: 'ADMIN.STATUS_REGULAR', value: 'REGULAR' },
+    { labelKey: 'ADMIN.STATUS_PROBATION', value: 'PROBATION' },
+    { labelKey: 'ADMIN.STATUS_GRADUATED', value: 'GRADUATED' },
+  ];
+
   newRecord = signal<AcademicRecord>({ courseCode: '', semester: '', grade: 0, recognition: '' });
   showPassword = signal(false);
 
