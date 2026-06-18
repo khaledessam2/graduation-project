@@ -40,9 +40,19 @@ export class ProfileService {
           availableHours: p.availableHours ?? p.available_hours ?? current?.availableHours ?? 18,
           role: 'student',
           status: (p.status ?? current?.status ?? 'REGULAR') as Student['status'],
+          graduationDate: p.graduationDate ?? p.graduation_date ?? null,
+          degreeName: p.degreeName ?? p.degree_name ?? null,
+          honors: p.honors ?? null,
+          diplomaNumber: p.diplomaNumber ?? p.diploma_number ?? null,
         };
         this.profile.set(student);
-        this.auth.updateStats(student.gpa, student.passedHours, student.availableHours);
+        this.auth.updateStats(student.gpa, student.passedHours, student.availableHours, student.name, {
+          status: student.status,
+          graduationDate: student.graduationDate,
+          degreeName: student.degreeName,
+          honors: student.honors,
+          diplomaNumber: student.diplomaNumber,
+        });
         this.loading.set(false);
       }),
       catchError((err) => {

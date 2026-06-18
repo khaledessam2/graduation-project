@@ -26,6 +26,8 @@ export class RegisterCoursesComponent implements OnInit {
   pendingIds = this.registrationService.pendingCourseIds;
   serverMessage = this.registrationService.serverMessage;
 
+  isGraduated = computed(() => this.auth.currentUser()?.status === 'GRADUATED');
+
   filterLevel = signal<number | null>(null);
   filterTerm = signal<number | null>(null);
   filterDepartment = signal<string | null>(null);

@@ -10,6 +10,12 @@
       <div>
         <h2 class="text-xl font-bold text-slate-800">{{ 'PROFILE.TITLE' | translate }}</h2>
         <p class="text-slate-500 text-sm mt-0.5">{{ student()?.name }}</p>
+        @if (isGraduated()) {
+          <span class="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1 rounded-full text-xs font-semibold border border-amber-400 text-amber-600 bg-amber-50">
+            <ion-icon name="school-outline" class="text-sm"></ion-icon>
+            {{ 'ALUMNI.BADGE' | translate }}
+          </span>
+        }
       </div>
     </div>
 
@@ -39,7 +45,11 @@
             {{ 'PROFILE.YEAR' | translate }}
           </label>
           <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 bg-slate-50">
-            {{ s.yearOfStudy }}
+            @if (isGraduated()) {
+              {{ 'ALUMNI.GRADUATED_CLASS' | translate:{ year: (s.graduationDate | slice:0:4) || '—' } }}
+            } @else {
+              {{ s.yearOfStudy }}
+            }
           </div>
         </div>
 
@@ -66,12 +76,56 @@
             {{ 'PROFILE.GPA' | translate }}
           </label>
           <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold bg-slate-50" style="color: var(--color-primary)">
-            {{ s.gpa }}
+            @if (isGraduated() && s.honors) {
+              {{ s.gpa }} — {{ s.honors }}
+            } @else {
+              {{ s.gpa }}
+            }
           </div>
         </div>
 
+        <!-- Graduation Date (graduated only) -->
+        @if (isGraduated() && s.graduationDate) {
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
+              {{ 'ALUMNI.GRAD_DATE_LABEL' | translate }}
+            </label>
+            <div class="border-[1.5px] border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 bg-slate-50">
+              {{ s.graduationDate | slice:0:10 }}
+            </div>
+          </div>
+        }
+
       </div>
+
+      <!-- Graduated action buttons -->
+      @if (isGraduated()) {
+        <div class="mt-6 pt-6 border-t border-slate-100 flex flex-wrap gap-3">
+          <button
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white shadow-sm hover:opacity-90 transition-opacity"
+            style="background-color: #b8860b"
+            (click)="showCertificate.set(true)"
+          >
+            <ion-icon name="ribbon-outline" class="text-lg"></ion-icon>
+            {{ 'ALUMNI.DOWNLOAD_CERTIFICATE' | translate }}
+          </button>
+          <button
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white shadow-sm hover:opacity-90 transition-opacity bg-red-500"
+            (click)="logout()"
+          >
+            <ion-icon name="log-out-outline" class="text-lg"></ion-icon>
+            {{ 'SIDEBAR.LOGOUT' | translate }}
+          </button>
+        </div>
+      }
     }
   </div>
 
 </div>
+
+<!-- Certificate Modal -->
+<app-certificate-modal
+  [student]="student()"
+  [isOpen]="showCertificate()"
+  (closeModal)="showCertificate.set(false)"
+/>

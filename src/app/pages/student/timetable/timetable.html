@@ -6,6 +6,17 @@
     <p class="text-slate-500 text-sm mt-1">{{ 'TIMETABLE.SUBTITLE' | translate }}</p>
   </div>
 
+  <!-- Alumni banner -->
+  @if (isGraduated()) {
+    <div class="flex items-center gap-3 px-5 py-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-700">
+      <ion-icon name="school-outline" class="text-2xl shrink-0"></ion-icon>
+      <div>
+        <p class="font-semibold text-sm">{{ 'ALUMNI.NO_TIMETABLE_TITLE' | translate }}</p>
+        <p class="text-xs opacity-75 mt-0.5">{{ 'ALUMNI.NO_TIMETABLE_SUB' | translate }}</p>
+      </div>
+    </div>
+  }
+
   <!-- Error banner -->
   @if (timetableService.error()) {
     <div class="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">

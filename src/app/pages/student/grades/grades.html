@@ -1,14 +1,60 @@
-<div class="p-4 sm:p-6">
+<div class="p-4 sm:p-6 space-y-5">
 
   <!-- Page header -->
-  <div class="mb-6">
+  <div class="mb-1">
     <h2 class="text-lg font-bold text-slate-800">{{ 'GRADES.TITLE' | translate }}</h2>
   </div>
+
+  <!-- ── GRADUATED: Official Transcript header card ── -->
+  @if (isGraduated()) {
+    <div class="bg-[#075392] rounded-2xl p-6 text-white shadow-md">
+      <div class="flex items-center gap-3 mb-4">
+        <ion-icon name="business-outline" class="text-2xl opacity-80"></ion-icon>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest opacity-70">{{ 'ALUMNI.OFFICIAL_TRANSCRIPT' | translate }}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white/10 rounded-xl p-4">
+        <div>
+          <p class="text-xs opacity-60 mb-0.5">{{ 'ALUMNI.STUDENT_LABEL' | translate }}</p>
+          <p class="text-sm font-semibold">{{ student()?.name }}</p>
+        </div>
+        <div>
+          <p class="text-xs opacity-60 mb-0.5">{{ 'ALUMNI.ID_LABEL' | translate }}</p>
+          <p class="text-sm font-semibold font-mono">{{ student()?.studentId }}</p>
+        </div>
+        <div>
+          <p class="text-xs opacity-60 mb-0.5">{{ 'PROFILE.DEPARTMENT' | translate }}</p>
+          <p class="text-sm font-semibold">{{ student()?.department }}</p>
+        </div>
+        @if (student()?.graduationDate) {
+          <div>
+            <p class="text-xs opacity-60 mb-0.5">{{ 'ALUMNI.GRAD_DATE_LABEL' | translate }}</p>
+            <p class="text-sm font-semibold">{{ student()?.graduationDate | slice:0:10 }}</p>
+          </div>
+        }
+      </div>
+      <!-- GPA summary -->
+      <div class="mt-4 flex items-center gap-4">
+        <div class="bg-white/10 rounded-xl px-5 py-3 text-center">
+          <p class="text-3xl font-extrabold">{{ student()?.gpa | number:'1.2-2' }}</p>
+          <p class="text-xs opacity-70">{{ 'ALUMNI.CUMULATIVE_GPA' | translate }}</p>
+        </div>
+        @if (student()?.honors) {
+          <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-400 text-amber-300 text-sm font-semibold">
+            <ion-icon name="star-outline"></ion-icon>
+            {{ student()?.honors }}
+          </span>
+        }
+      </div>
+    </div>
+  }
 
   <!-- Grades Table -->
   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
-    <!-- Filters -->
+    <!-- Filters (hidden for graduated — all grades shown) -->
+    @if (!isGraduated()) {
     <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/50 space-y-3">
       <div class="flex flex-wrap gap-4">
         <div class="flex flex-col gap-1.5 flex-1 min-w-[150px]">
@@ -52,6 +98,7 @@
         </div>
       }
     </div>
+    } <!-- end @if (!isGraduated()) filters -->
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>

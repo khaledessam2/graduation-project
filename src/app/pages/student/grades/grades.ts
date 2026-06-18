@@ -1,5 +1,7 @@
 import { Component, inject, computed, signal, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { GradesService } from '../../../services/student/grades.service';
+import { AuthService } from '../../../services/auth.service';
+import { DecimalPipe, SlicePipe } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PaginationComponent } from '../../../shared/pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
@@ -7,14 +9,18 @@ import { Select } from 'primeng/select';
 
 @Component({
   selector: 'app-grades',
-  imports: [TranslateModule, PaginationComponent, FormsModule, Select],
+  imports: [TranslateModule, PaginationComponent, FormsModule, Select, DecimalPipe, SlicePipe],
   templateUrl: './grades.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class GradesComponent implements OnInit {
   gradesService = inject(GradesService);
   private translate = inject(TranslateService);
+  private auth = inject(AuthService);
   grades = this.gradesService.grades;
+
+  isGraduated = computed(() => this.auth.currentUser()?.status === 'GRADUATED');
+  student = this.auth.currentUser;
 
   filterLevel = signal<number | null>(null);
   filterTerm = signal<number | null>(null);
@@ -38,14 +44,7 @@ export class GradesComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.gradesService.loadGrades().subscribe(() => {
-      const firstGrade = this.gradesService.grades()[0];
-      if (firstGrade?.level != null) {
-        this.filterLevel.set(firstGrade.level);
-        this.filterTerm.set(firstGrade.term ?? null);
-        this.gradesService.loadGrades(firstGrade.level, firstGrade.term ?? undefined).subscribe();
-      }
-    });
+    this.gradesService.loadGrades('all', 'all').subscribe();
   }
 
   onLevelChange(value: number | null): void {

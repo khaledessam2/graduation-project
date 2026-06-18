@@ -50,7 +50,7 @@ export class AuthService {
         }
 
         const resolvedRole = ((data.role ?? role) as string).toLowerCase() as 'student' | 'admin';
-        const s = data.student ?? res.student ?? {};
+        const s = data.studentData ?? data.student ?? res.student ?? {};
         const user: Student = {
           id: 0,
           name: s.name ?? '',
@@ -79,11 +79,11 @@ export class AuthService {
     );
   }
 
-  /** Called after dashboard loads to sync GPA / hours / name into the user signal */
-  updateStats(gpa: number, passedHours: number, availableHours: number, name?: string): void {
+  /** Called after dashboard/profile loads to sync student data into the user signal */
+  updateStats(gpa: number, passedHours: number, availableHours: number, name?: string, extra?: Partial<Student>): void {
     const user = this.currentUser();
     if (!user) return;
-    const updated: Student = { ...user, gpa, passedHours, availableHours, ...(name ? { name } : {}) };
+    const updated: Student = { ...user, gpa, passedHours, availableHours, ...(name ? { name } : {}), ...(extra ?? {}) };
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updated));
     this.currentUser.set(updated);
   }

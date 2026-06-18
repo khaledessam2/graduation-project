@@ -1,0 +1,161 @@
+@if (isOpen && student) {
+  <!-- Backdrop -->
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+    (click)="close()"
+  >
+    <!-- Card wrapper (stops backdrop click) -->
+    <div
+      class="w-full max-w-2xl bg-white rounded-xl shadow-2xl flex flex-col max-h-[95vh] overflow-hidden"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- Top action bar (hidden when printing) -->
+      <div class="no-print flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-slate-50 shrink-0">
+        <span class="text-sm font-semibold text-slate-700">Graduation Certificate / شهادة التخرج</span>
+        <div class="flex items-center gap-2">
+          <button
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#075392] hover:bg-[#075392]/90 transition-colors"
+            (click)="print()"
+          >
+            <ion-icon name="print-outline" class="text-base"></ion-icon>
+            Print / طباعة
+          </button>
+          <button
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-200 transition-colors"
+            (click)="close()"
+          >
+            <ion-icon name="close-outline" class="text-xl"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Certificate body (scrollable, printable) -->
+      <div class="overflow-y-auto p-6" id="certificate-content">
+
+        <!-- ══════════════ CERTIFICATE ══════════════ -->
+        <div
+          class="certificate-page relative bg-white mx-auto"
+          style="
+            width: 100%;
+            max-width: 680px;
+            border: 4px solid #b8860b;
+            padding: 6px;
+          "
+        >
+          <!-- Inner border -->
+          <div style="border: 1.5px solid #075392; padding: 28px 36px 24px;">
+
+            <!-- ── Header ── -->
+            <div class="flex items-start justify-between mb-4">
+              <!-- Left: English -->
+              <div class="text-left">
+                <p class="text-[#075392] font-bold text-sm leading-tight">Tanta University</p>
+                <p class="text-slate-600 text-xs mt-0.5">Faculty of Computers and Information</p>
+              </div>
+              <!-- Center: Seal -->
+              <div class="flex flex-col items-center">
+                <img
+                  src="assets/images/logo.png"
+                  alt="University Seal"
+                  class="w-14 h-14 object-contain"
+                />
+              </div>
+              <!-- Right: Arabic -->
+              <div class="text-right" dir="rtl">
+                <p class="text-[#075392] font-bold text-sm leading-tight">جامعة طنطا</p>
+                <p class="text-slate-600 text-xs mt-0.5">كلية الحاسبات والمعلومات</p>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="border-slate-200 mb-5" />
+
+            <!-- ── Title ── -->
+            <div class="text-center mb-6">
+              <p
+                class="text-[#b8860b] font-bold mb-1"
+                style="font-size: 2.2rem; font-family: 'Arial', sans-serif;"
+                dir="rtl"
+              >
+                شهادة تخرج
+              </p>
+              <p class="text-[#075392] font-semibold tracking-[0.25em] text-sm uppercase">
+                GRADUATION CERTIFICATE
+              </p>
+            </div>
+
+            <!-- ── Body text ── -->
+            <p class="text-center text-slate-600 text-sm mb-5">
+              This is to certify that student
+              <span class="mx-2 text-slate-400">/</span>
+              تشهد الكلية بأن الطالب
+            </p>
+
+            <!-- ── Student name ── -->
+            <p
+              class="text-center font-bold text-[#075392] mb-6"
+              style="font-size: 1.5rem;"
+            >
+              {{ student.name }}
+            </p>
+
+            <!-- ── Info row ── -->
+            <div class="grid grid-cols-3 gap-4 text-center mb-6">
+              <div>
+                <p class="text-xs text-slate-400 mb-1">
+                  Student ID
+                  <span class="mx-1 text-slate-300">/</span>
+                  رقم القيد
+                </p>
+                <p class="font-semibold text-slate-800 text-sm">{{ student.studentId }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400 mb-1">
+                  Department
+                  <span class="mx-1 text-slate-300">/</span>
+                  القسم
+                </p>
+                <p class="font-semibold text-slate-800 text-sm">{{ getDeptName(student.department) }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400 mb-1">
+                  Cumulative GPA
+                  <span class="mx-1 text-slate-300">/</span>
+                  المعدل التراكمي
+                </p>
+                <p class="font-semibold text-slate-800 text-sm">{{ student.gpa | number:'1.2-2' }}</p>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="border-slate-200 mb-5" />
+
+            <!-- ── Footer ── -->
+            <div class="flex items-end justify-between">
+              <!-- Left: Graduation date -->
+              <div>
+                @if (student.graduationDate) {
+                  <p class="text-sm text-slate-600">
+                    Graduation Date: <span class="font-semibold">{{ student.graduationDate | slice:0:10 }}</span>
+                  </p>
+                }
+              </div>
+              <!-- Right: Dean signature -->
+              <div class="text-right" dir="rtl">
+                <p class="text-xs text-[#075392] font-semibold mb-4">
+                  Dean of Faculty
+                  <span class="mx-1 text-slate-400">/</span>
+                  عميد الكلية
+                </p>
+                <div style="width: 120px; border-top: 1px solid #64748b; margin-right: 0; margin-left: auto;"></div>
+              </div>
+            </div>
+
+          </div><!-- inner border -->
+        </div><!-- certificate-page -->
+
+      </div><!-- scrollable body -->
+    </div><!-- card wrapper -->
+  </div><!-- backdrop -->
+}

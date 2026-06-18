@@ -15,6 +15,8 @@ export class TimetableComponent implements OnInit {
   timetableService = inject(TimetableService);
   auth = inject(AuthService);
 
+  isGraduated = computed(() => this.auth.currentUser()?.status === 'GRADUATED');
+
   searchQuery = signal('');
 
   filteredEntries = computed(() => {
